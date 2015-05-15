@@ -1,0 +1,8 @@
+<phpunit bootstrap="../Autoloader.php">
+    <testsuites>
+        <testsuite name="Core">
+            <file>ApplicationContextTest.php</file>
+            <file>BeanFactoryTest.php</file>
+        </testsuite>
+    </testsuites>
+</phpunit>
