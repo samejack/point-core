@@ -132,7 +132,7 @@ class BeanFactory
                 $this->_included = true;
                 include_once($this->_rawConfiguration[Bean::INCLUDE_PATH]);
             }
-            $object = new $this->_className;
+            $object = $this->_make();
             $this->setInstance($object);
             return $this->_instance;
         }
@@ -140,11 +140,27 @@ class BeanFactory
         // prototype scope
         if (isset($this->_rawConfiguration[Bean::SCOPE])
             && $this->_rawConfiguration[Bean::SCOPE] === Bean::SCOPE_PROTOTYPE) {
-            $object = new $this->_className;
+            $object = $this->_make();
             $this->setInstance($object);
         }
 
         return $this->_instance;
+    }
+
+    /**
+     * Instance class
+     *
+     * @return object
+     */
+    private function _make()
+    {
+        if (isset($this->_rawConfiguration[Bean::CONSTRUCTOR_ARG]) && is_array($this->_rawConfiguration[Bean::CONSTRUCTOR_ARG])) {
+            if (is_null($this->_reflector)) {
+                $this->_reflector = new \ReflectionClass($this->_className);
+            }
+            return $this->_reflector->newInstanceArgs($this->_rawConfiguration[Bean::CONSTRUCTOR_ARG]);
+        }
+        return new $this->_className();
     }
 
     /**

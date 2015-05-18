@@ -183,7 +183,10 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(is_string($hash1));
         $this->assertTrue(is_string($hash2));
         $this->assertEquals($hash1, $hash2);
+    }
 
+    public function testScopePrototype()
+    {
         // scope=prototype
         $context = new Context();
         $config = array(
@@ -204,6 +207,24 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(is_string($hash1));
         $this->assertTrue(is_string($hash2));
         $this->assertNotEquals($hash1, $hash2);
+    }
 
+    public function testConstructorArgs()
+    {
+        $context = new Context();
+        $config = array(
+            Bean::CLASS_NAME => '\point\core\test\ConstructorArgs',
+            Bean::INCLUDE_PATH => __DIR__ . '/TestClass/ConstructorArgs.php',
+            Bean::CONSTRUCTOR_ARG => array('STRING', array('MY', 'NAME'))
+        );
+        $beanFactory = new BeanFactory(
+            $context,
+            $config[Bean::CLASS_NAME],
+            $config
+        );
+
+        $this->assertEquals($beanFactory->getInstance()->arg1, $config[Bean::CONSTRUCTOR_ARG][0]);
+        $this->assertEquals($beanFactory->getInstance()->arg2[0], $config[Bean::CONSTRUCTOR_ARG][1][0]);
+        $this->assertEquals($beanFactory->getInstance()->arg2[1], $config[Bean::CONSTRUCTOR_ARG][1][1]);
     }
 }
