@@ -140,4 +140,70 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($property->getVars()['pubVar'], $config[Bean::PROPERTY]['pubVar']);
 
     }
+
+    public function testScopeSingleton()
+    {
+        // scope=(default)
+        $context = new Context();
+        $config = array(
+            Bean::CLASS_NAME => '\point\core\test\Foo',
+            Bean::INCLUDE_PATH => __DIR__ . '/TestClass/Foo.php'
+        );
+
+        $beanFactory = new BeanFactory(
+            $context,
+            $config[Bean::CLASS_NAME],
+            $config
+        );
+
+        $hash1 = spl_object_hash($beanFactory->getInstance());
+        $hash2 = spl_object_hash($beanFactory->getInstance());
+
+        $this->assertTrue(is_string($hash1));
+        $this->assertTrue(is_string($hash2));
+        $this->assertEquals($hash1, $hash2);
+
+        // scope=singleton
+        $context = new Context();
+        $config = array(
+            Bean::CLASS_NAME => '\point\core\test\Foo',
+            Bean::INCLUDE_PATH => __DIR__ . '/TestClass/Foo.php',
+            Bean::SCOPE => Bean::SCOPE_SINGLETON
+        );
+
+        $beanFactory = new BeanFactory(
+            $context,
+            $config[Bean::CLASS_NAME],
+            $config
+        );
+
+        $hash1 = spl_object_hash($beanFactory->getInstance());
+        $hash2 = spl_object_hash($beanFactory->getInstance());
+
+        $this->assertTrue(is_string($hash1));
+        $this->assertTrue(is_string($hash2));
+        $this->assertEquals($hash1, $hash2);
+
+        // scope=prototype
+        $context = new Context();
+        $config = array(
+            Bean::CLASS_NAME => '\point\core\test\Foo',
+            Bean::INCLUDE_PATH => __DIR__ . '/TestClass/Foo.php',
+            Bean::SCOPE => Bean::SCOPE_PROTOTYPE
+        );
+
+        $beanFactory = new BeanFactory(
+            $context,
+            $config[Bean::CLASS_NAME],
+            $config
+        );
+
+        $hash1 = spl_object_hash($beanFactory->getInstance());
+        $hash2 = spl_object_hash($beanFactory->getInstance());
+
+        $this->assertTrue(is_string($hash1));
+        $this->assertTrue(is_string($hash2));
+        $this->assertNotEquals($hash1, $hash2);
+
+    }
 }

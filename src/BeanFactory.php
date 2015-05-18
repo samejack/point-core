@@ -23,6 +23,8 @@ class BeanFactory
     private $_dependencyInjectionBeans = array();
     private $_hasConfiguration = false;
 
+    private $_included = false;
+
     /**
      * @var ReflectionClass
      */
@@ -126,12 +128,22 @@ class BeanFactory
         // TODO: non-singleton @Scope(singleton/prototype) anotation
         if (is_null($this->_instance) && $this->_hasConfiguration) {
             $this->_context->log("Instance Class: $this->_className");
-            if (isset($this->_rawConfiguration[Bean::INCLUDE_PATH])) {
+            if (!$this->_included && isset($this->_rawConfiguration[Bean::INCLUDE_PATH])) {
+                $this->_included = true;
                 include_once($this->_rawConfiguration[Bean::INCLUDE_PATH]);
             }
             $object = new $this->_className;
             $this->setInstance($object);
+            return $this->_instance;
         }
+
+        // prototype scope
+        if (isset($this->_rawConfiguration[Bean::SCOPE])
+            && $this->_rawConfiguration[Bean::SCOPE] === Bean::SCOPE_PROTOTYPE) {
+            $object = new $this->_className;
+            $this->setInstance($object);
+        }
+
         return $this->_instance;
     }
 

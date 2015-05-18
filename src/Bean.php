@@ -17,4 +17,10 @@ class Bean
     const AUTO_LOAD = 'auto-load';
     const INCLUDE_PATH = 'include-path';
     const ID = 'id';
+    /**
+     * Instance scope: singleton|prototype
+     */
+    const SCOPE = 'scope';
+    const SCOPE_SINGLETON = 'singleton';
+    const SCOPE_PROTOTYPE = 'prototype';
 }
