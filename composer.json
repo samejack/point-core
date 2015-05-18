@@ -1,6 +1,24 @@
 {
-    "require-dev": {
-        "php": ">=5.3.0",
-        "phpunit/phpunit": "3.7.*"
+  "name": "point/point-core",
+  "description": "PHP IoC/DI Container",
+  "keywords": ["framework", "point-core"],
+  "license": "Apache-2.0",
+  "type": "project",
+  "require-dev": {
+     "php": ">=5.3.0",
+     "phpunit/phpunit": "~3.7.*"
+  },
+  "autoload": {
+    "classmap": [],
+    "psr-4": {
+      "point\\core\\": "src/"
     }
+  },
+  "authors": [
+    {
+      "name": "SJ",
+      "email": "sj@toright.com",
+      "homepage": "http://blog.toright.com",
+      "role": "Developer"
+  }
 }
