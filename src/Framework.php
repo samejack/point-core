@@ -12,9 +12,9 @@ class Framework
 
     /**
      * @Autowired
-     * @var \point\core\ApplicationContext
+     * @var \point\core\Context
      */
-    private $_applicationContext;
+    private $_context;
 
     /**
      * @Autowired
@@ -77,10 +77,10 @@ class Framework
                 'class' => '\point\core\PlatformClassLoader',
             ),
         );
-        $this->_applicationContext->addConfiguration($beans);
+        $this->_context->addConfiguration($beans);
 
         // register plugin and platform class loader
-        EventHandleManager::addClassLoader($this->_applicationContext->getBeanByClassName('point\core\PlatformClassLoader'));
+        EventHandleManager::addClassLoader($this->_context->getBeanByClassName('point\core\PlatformClassLoader'));
 
 
         //install plugin

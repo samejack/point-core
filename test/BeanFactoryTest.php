@@ -4,7 +4,7 @@ namespace point\core\test;
 
 include_once __DIR__ . '/../Autoloader.php';
 
-use \point\core\ApplicationContext;
+use \point\core\Context;
 use \point\core\Bean;
 use \point\core\BeanFactory;
 
@@ -14,7 +14,7 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
     public function testGetInstance()
     {
 
-        $applicationContext = new ApplicationContext();
+        $context = new Context();
 
         $config = array(
             Bean::CLASS_NAME => '\point\core\test\Bar',
@@ -22,7 +22,7 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
         );
 
         $beanFactory = new BeanFactory(
-            $applicationContext,
+            $context,
             $config[Bean::CLASS_NAME],
             $config
         );
@@ -36,7 +36,7 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
     public function testGetInstanceInitMethod()
     {
 
-        $applicationContext = new ApplicationContext();
+        $context = new Context();
 
         $config = array(
             Bean::CLASS_NAME => '\point\core\test\Bar',
@@ -45,7 +45,7 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
         );
 
         $beanFactory = new BeanFactory(
-            $applicationContext,
+            $context,
             $config[Bean::CLASS_NAME],
             $config
         );
@@ -58,7 +58,7 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
     public function testGetInstanceInitMethodWithParameter()
     {
 
-        $applicationContext = new ApplicationContext();
+        $context = new Context();
 
         $config = array(
             Bean::CLASS_NAME => '\point\core\test\Bar',
@@ -67,7 +67,7 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
         );
 
         $beanFactory = new BeanFactory(
-            $applicationContext,
+            $context,
             $config[Bean::CLASS_NAME],
             $config
         );
@@ -80,7 +80,7 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
     public function testAutoload()
     {
 
-        $applicationContext = new ApplicationContext();
+        $context = new Context();
 
         $config = array(
             Bean::CLASS_NAME => '\point\core\test\NonAutoload',
@@ -90,7 +90,7 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
         include_once __DIR__ . '/TestClass/NonAutoload.php';
 
         new BeanFactory(
-            $applicationContext,
+            $context,
             $config[Bean::CLASS_NAME],
             $config
         );
@@ -106,7 +106,7 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
         include_once __DIR__ . '/TestClass/Autoload.php';
 
         new BeanFactory(
-            $applicationContext,
+            $context,
             $config[Bean::CLASS_NAME],
             $config
         );
@@ -117,7 +117,7 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
     public function testPropertySet()
     {
 
-        $applicationContext = new ApplicationContext();
+        $context = new Context();
 
         $config = array(
             Bean::CLASS_NAME => '\point\core\test\Property',
@@ -129,7 +129,7 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
         );
 
         $beanFactory = new BeanFactory(
-            $applicationContext,
+            $context,
             $config[Bean::CLASS_NAME],
             $config
         );

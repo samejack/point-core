@@ -25,9 +25,9 @@ class Runtime
 
     /**
      * @Autowired
-     * @var \point\core\ApplicationContext
+     * @var \point\core\Context
      */
-    private $_applicationContext;
+    private $_context;
 
     /**
      * Get extension points
@@ -171,7 +171,7 @@ class Runtime
 
         // load beans
         if (array_key_exists('Beans', $this->_plugins[$pluginId])) {
-            $this->_applicationContext->addConfiguration($this->_plugins[$pluginId]['Beans']);
+            $this->_context->addConfiguration($this->_plugins[$pluginId]['Beans']);
         }
 
         $this->_plugins[$pluginId]['Status'] = Runtime::RESOLVED;
@@ -223,9 +223,9 @@ class Runtime
                         Bean::INIT_METHOD => array('start')
                     )
                 );
-                $this->_applicationContext->addConfiguration($configurations);
+                $this->_context->addConfiguration($configurations);
 
-                $this->_applicationContext->getBeanByClassName($classFullName);
+                $this->_context->getBeanByClassName($classFullName);
 
                 //record start plugin name
                 if (!array_key_exists($pluginId, $this->_startPluginList)) {
@@ -255,7 +255,7 @@ class Runtime
             //invoke activator stop
             if (array_key_exists('Activator', $this->_plugins[$pluginId])) {
                 $classFullName = str_replace('.', '\\', $pluginId) . '\\' . $this->_plugins[$pluginId]['Activator'];
-                $activator = $this->_applicationContext->getBeanByClassName($classFullName);
+                $activator = $this->_context->getBeanByClassName($classFullName);
                 // stop plugin
                 if (!is_null($activator) && method_exists($activator, 'stop')) {
                     $this->setCurrentPluginId($pluginId);

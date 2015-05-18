@@ -3,11 +3,11 @@
 namespace point\core;
 
 /**
- * Class ApplicationContext
+ * Class Context
  *
  * @author sj
  */
-class ApplicationContext
+class Context
 {
 
     /**
@@ -25,9 +25,9 @@ class ApplicationContext
     private $_beanMapById = array();
 
     /**
-     * Singleton ApplicationContext point
+     * Singleton Context point
      *
-     * @var ApplicationContext
+     * @var Context
      */
     private static $_self = null;
 
@@ -39,23 +39,23 @@ class ApplicationContext
     private $_debug = false;
 
     /**
-     * ApplicationContext configuration
+     * Context configuration
      *
      * @var array
      */
     private $_config = array();
 
     /**
-     * Get singleton instance object of ApplicationContext class
+     * Get singleton instance object of Context class
      *
-     * @return ApplicationContext
+     * @return Context
      */
     public static function getInstance()
     {
-        if (ApplicationContext::$_self == null) {
-            ApplicationContext::$_self = new ApplicationContext();
+        if (Context::$_self == null) {
+            Context::$_self = new Context();
         }
-        return ApplicationContext::$_self;
+        return Context::$_self;
     }
 
     /**
@@ -86,8 +86,8 @@ class ApplicationContext
             }
         }
 
-        if (is_null(ApplicationContext::$_self)) {
-            ApplicationContext::$_self = $this;
+        if (is_null(Context::$_self)) {
+            Context::$_self = $this;
         }
         $this->setBean($this);
     }
@@ -106,7 +106,7 @@ class ApplicationContext
      * Log message
      *
      * @param string $message
-     * @see ApplicationContext->setDebug()
+     * @see Context->setDebug()
      */
     public function log($message)
     {

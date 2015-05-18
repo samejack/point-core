@@ -11,21 +11,21 @@ class Bootstrap
 {
     public function __construct()
     {
-        include_once dirname(__FILE__) . '/ApplicationContext.php';
+        include_once dirname(__FILE__) . '/Context.php';
 
-        $applicationContext = new ApplicationContext();
+        $context = new Context();
 
         date_default_timezone_set('UTC');
 
         include_once dirname(__FILE__) . '/Framework.php';
 
-        $applicationContext->addConfiguration(
+        $context->addConfiguration(
             array(
                 array(
                     Bean::CLASS_NAME => '\point\core\Framework',
                 )
             )
         );
-        $applicationContext->getBeanByClassName('point\core\Framework')->launcher();
+        $context->getBeanByClassName('point\core\Framework')->launcher();
     }
 }

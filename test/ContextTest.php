@@ -2,12 +2,12 @@
 
 namespace point\core\test;
 
-use \point\core\ApplicationContext;
+use \point\core\Context;
 use \point\core\Bean;
 
 include_once __DIR__ . '/../Autoloader.php';
 
-class ApplicationContextTest extends \PHPUnit_Framework_TestCase
+class ContextTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
@@ -18,19 +18,19 @@ class ApplicationContextTest extends \PHPUnit_Framework_TestCase
     public function testGetBeanByClassName()
     {
 
-        $applicationContext = new ApplicationContext();
+        $context = new Context();
 
-        $applicationContext->addConfiguration(array(
+        $context->addConfiguration(array(
             array(
                 Bean::CLASS_NAME => '\point\core\test\Foo',
                 Bean::INCLUDE_PATH => __DIR__ . '/TestClass/Foo.php'
             )
         ));
 
-        $this->_foo = $applicationContext->getBeanByClassName('\point\core\test\Foo');
+        $this->_foo = $context->getBeanByClassName('\point\core\test\Foo');
         $hash1 = spl_object_hash($this->_foo);
 
-        $this->_foo = $applicationContext->getBeanByClassName('\point\core\test\Foo');
+        $this->_foo = $context->getBeanByClassName('\point\core\test\Foo');
         $hash2 = spl_object_hash($this->_foo);
 
         $this->assertTrue(is_string($hash1));
@@ -42,9 +42,9 @@ class ApplicationContextTest extends \PHPUnit_Framework_TestCase
     public function testInject()
     {
 
-        $applicationContext = new ApplicationContext();
+        $context = new Context();
 
-        $applicationContext->addConfiguration(array(
+        $context->addConfiguration(array(
             array(
                 Bean::CLASS_NAME => '\point\core\test\Foo',
                 Bean::INCLUDE_PATH => __DIR__ . '/TestClass/Foo.php'
@@ -55,7 +55,7 @@ class ApplicationContextTest extends \PHPUnit_Framework_TestCase
             )
         ));
 
-        $this->_foo = $applicationContext->getBeanByClassName('\point\core\test\Foo');
+        $this->_foo = $context->getBeanByClassName('\point\core\test\Foo');
 
         $this->assertEquals(get_class($this->_foo->getInject()), 'point\core\test\Inject');
         $this->assertNull($this->_foo->getBar());
@@ -65,20 +65,20 @@ class ApplicationContextTest extends \PHPUnit_Framework_TestCase
     public function testPostInject()
     {
 
-        $applicationContext = new ApplicationContext();
+        $context = new Context();
 
-        $applicationContext->addConfiguration(array(
+        $context->addConfiguration(array(
             array(
                 Bean::CLASS_NAME => '\point\core\test\Foo',
                 Bean::INCLUDE_PATH => __DIR__ . '/TestClass/Foo.php'
             )
         ));
 
-        $this->_foo = $applicationContext->getBeanByClassName('\point\core\test\Foo');
+        $this->_foo = $context->getBeanByClassName('\point\core\test\Foo');
 
         $this->assertNull($this->_foo->getBar());
 
-        $applicationContext->addConfiguration(array(
+        $context->addConfiguration(array(
             array(
                 Bean::CLASS_NAME => '\point\core\test\Bar',
                 Bean::INCLUDE_PATH => __DIR__ . '/TestClass/Bar.php'

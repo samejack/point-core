@@ -34,25 +34,25 @@ class BeanFactory
     private $_rawConfiguration;
 
     /**
-     * @var ApplicationContext
+     * @var Context
      */
-    private $_applicationContext;
+    private $_context;
 
     /**
      * Construct
      *
-     * @param ApplicationContext $applicationContext ApplicationContext
+     * @param Context            $_context           Point Application Context
      * @param string             $className          Class or Interface Name
      * @param array              $configuration      Bean Configuration
      * @param \ReflectionClass   $reflector
      */
     public function __construct(
-        ApplicationContext &$applicationContext,
+        Context &$_context,
         $className,
         array &$configuration = null,
         \ReflectionClass &$reflector = null
     ) {
-        $this->_applicationContext = $applicationContext;
+        $this->_context = $_context;
         $this->_className = $className;
         if (is_array($configuration)) {
             $this->setConfiguration($configuration);
@@ -125,7 +125,7 @@ class BeanFactory
     {
         // TODO: non-singleton @Scope(singleton/prototype) anotation
         if (is_null($this->_instance) && $this->_hasConfiguration) {
-            $this->_applicationContext->log("Instance Class: $this->_className");
+            $this->_context->log("Instance Class: $this->_className");
             if (isset($this->_rawConfiguration[Bean::INCLUDE_PATH])) {
                 include_once($this->_rawConfiguration[Bean::INCLUDE_PATH]);
             }
@@ -148,7 +148,7 @@ class BeanFactory
             $property->setAccessible(true);
             $property->setValue($bean, $this->_instance);
         } else {
-            $this->_applicationContext->log(
+            $this->_context->log(
                 'Record inject stage: ' . get_class($bean) . '->' . $property->getName() . ' :: ' . $this->_className
             );
             array_push($this->_dependencyInjectionBeans, array(
@@ -176,10 +176,10 @@ class BeanFactory
         // fire interface has be instance
         $interfaces = array_keys($this->_reflector->getInterfaces());
         foreach ($interfaces as &$interfaceName) {
-            $this->_applicationContext->makeInterfaceRefs($interfaceName, $this);
+            $this->_context->makeInterfaceRefs($interfaceName, $this);
         }
 
-        $this->_applicationContext->injection($this->_instance, $this->_reflector);
+        $this->_context->injection($this->_instance, $this->_reflector);
 
         // set properties
         if (array_key_exists(Bean::PROPERTY, $this->_rawConfiguration)) {
