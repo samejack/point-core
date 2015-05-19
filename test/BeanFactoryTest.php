@@ -136,8 +136,9 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
 
         $property = $beanFactory->getInstance();
 
-        $this->assertEquals($property->getVars()['_priVar'], $config[Bean::PROPERTY]['priVar']);
-        $this->assertEquals($property->getVars()['pubVar'], $config[Bean::PROPERTY]['pubVar']);
+        $vars = $property->getVars();
+        $this->assertEquals($vars['_priVar'], $config[Bean::PROPERTY]['priVar']);
+        $this->assertEquals($vars['pubVar'], $config[Bean::PROPERTY]['pubVar']);
 
     }
 
