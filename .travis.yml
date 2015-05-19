@@ -1,0 +1,8 @@
+language: php
+
+php:
+  - 5.3
+
+env:
+
+script: phpunit --configuration ./test/phpunit.xml --coverage-text
