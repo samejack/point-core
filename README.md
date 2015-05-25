@@ -1,4 +1,4 @@
-# point-core [![Build Status](https://travis-ci.org/samejack/point-core.svg?branch=master)](https://travis-ci.org/samejack/point-core)
+# point-core [![Build Status](https://travis-ci.org/samejack/point-core.svg?branch=master)](https://travis-ci.org/samejack/point-core) [![Code Climate](https://codeclimate.com/github/samejack/point-core/badges/gpa.svg)](https://codeclimate.com/github/samejack/point-core)
 
 ## Overview
 This is a PHP IoC/DI Module Container.It can inject instance of object through the @Annotation on PHPDoc.
