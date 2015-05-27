@@ -8,7 +8,13 @@ php:
   
 env:
 
-script: phpunit --configuration ./test/phpunit.xml --coverage-text
+before_script:
+ - wget http://getcomposer.org/composer.phar
+ - php composer.phar install --dev --no-interaction
+
+script:
+ - mkdir -p build/logs
+ - phpunit --configuration ./test/phpunit.xml --coverage-clover build/logs/clover.xml
 
 after_script:
  - php vendor/bin/coveralls -v
