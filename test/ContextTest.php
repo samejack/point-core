@@ -88,5 +88,25 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(get_class($this->_foo->getBar()), 'point\core\test\Bar');
     }
 
-    //TODO interface
+    public function testInterfaceInject()
+    {
+
+        $context = new Context();
+
+        $context->addConfiguration(array(
+            array(
+                Bean::CLASS_NAME => '\point\core\test\Foo',
+                Bean::INCLUDE_PATH => __DIR__ . '/TestClass/Foo.php'
+            ),
+            array(
+                Bean::CLASS_NAME => '\point\core\test\MyInterfaceImp',
+                Bean::INCLUDE_PATH => __DIR__ . '/TestClass/MyInterfaceImp.php',
+                Bean::AUTO_LOAD => true
+            )
+        ));
+
+        $this->_foo = $context->getBeanByClassName('\point\core\test\Foo');
+
+        $this->assertEquals(get_class($this->_foo->getInjectInterface()), 'point\core\test\MyInterfaceImp');
+    }
 }

@@ -17,6 +17,12 @@ class Foo
      */
     private $_inject;
 
+    /**
+     * @Autowired
+     * @var \point\core\test\MyInterface
+     */
+    private $_injectInterface;
+
     public function __construct()
     {
     }
@@ -29,5 +35,10 @@ class Foo
     public function getInject()
     {
         return $this->_inject;
+    }
+
+    public function getInjectInterface()
+    {
+        return $this->_injectInterface;
     }
 }
