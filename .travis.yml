@@ -9,3 +9,7 @@ php:
 env:
 
 script: phpunit --configuration ./test/phpunit.xml --coverage-text
+
+after_script:
+ - php vendor/bin/coveralls -v
+ 
