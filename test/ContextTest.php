@@ -15,6 +15,12 @@ class ContextTest extends \PHPUnit_Framework_TestCase
      */
     private $_foo;
 
+    public function testGetInstance()
+    {
+        $context = Context::getInstance();
+        $this->assertEquals(get_class($context), 'point\core\Context');
+    }
+
     public function testGetBeanByClassName()
     {
 

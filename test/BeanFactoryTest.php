@@ -97,6 +97,9 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNull(NonAutoload::$INSTANCE);
 
+        new NonAutoload();
+        $this->assertNotNull(NonAutoload::$INSTANCE);
+
         $config = array(
             Bean::CLASS_NAME => '\point\core\test\Autoload',
             Bean::INCLUDE_PATH => __DIR__ . '/TestClass/Autoload.php',
