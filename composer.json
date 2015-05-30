@@ -1,9 +1,12 @@
 {
   "name": "point/point-core",
-  "description": "PHP IoC/DI Container",
-  "keywords": ["framework", "point-core"],
+  "description": "PHP IoC/DI Container Framework",
+  "keywords": ["framework", "point-core", "php"],
   "license": "Apache-2.0",
   "type": "project",
+  "require": {
+    "php": ">=5.3.0"
+  },
   "require-dev": {
      "php": ">=5.3.0",
      "phpunit/phpunit": "3.7.*",
