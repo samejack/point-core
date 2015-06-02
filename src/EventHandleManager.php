@@ -73,7 +73,9 @@ class EventHandleManager
         if (count(self::$_exceptionHanlders) > 0) {
             foreach (self::$_exceptionHanlders as &$handler) {
                 if (method_exists($handler, 'exceptionHandler')) {
-                    $handler->exceptionHandler($exception);
+                    if ($handler->exceptionHandler($exception)) {
+                        break;
+                    }
                 }
             }
         } else {

@@ -78,6 +78,16 @@ class BeanFactory
         return !is_null($this->_instance);
     }
 
+    /**
+     * Get ReflectionClass of bean
+     *
+     * @return \ReflectionClass
+     */
+    public function &getReflectionClass()
+    {
+        return $this->_reflector;
+    }
+
     public function setConfiguration(&$configuration)
     {
         if ($this->_hasConfiguration) {
@@ -127,7 +137,6 @@ class BeanFactory
     {
         // TODO: non-singleton @Scope(singleton/prototype) anotation
         if (is_null($this->_instance) && $this->_hasConfiguration) {
-            $this->_context->log("Instance Class: $this->_className");
             if (!$this->_included && isset($this->_rawConfiguration[Bean::INCLUDE_PATH])) {
                 $this->_included = true;
                 include_once($this->_rawConfiguration[Bean::INCLUDE_PATH]);
@@ -154,6 +163,7 @@ class BeanFactory
      */
     private function _make()
     {
+        $this->_context->log("Instance Class: $this->_className");
         if (isset($this->_rawConfiguration[Bean::CONSTRUCTOR_ARG]) && is_array($this->_rawConfiguration[Bean::CONSTRUCTOR_ARG])) {
             if (is_null($this->_reflector)) {
                 $this->_reflector = new \ReflectionClass($this->_className);
@@ -190,7 +200,7 @@ class BeanFactory
      * Set instance object into this factory sample
      *
      * @throws \Exception
-     * @param object $ref
+     * @param object   $ref           Instance object
      * @return void
      */
     public function setInstance(&$ref)
@@ -204,7 +214,10 @@ class BeanFactory
         // fire interface has be instance
         $interfaces = array_keys($this->_reflector->getInterfaces());
         foreach ($interfaces as &$interfaceName) {
-            $this->_context->makeInterfaceRefs($interfaceName, $this);
+            // skip php native interface
+            if (strpos($interfaceName, '\\') !== false) {
+                $this->_context->makeInterfaceRefs($interfaceName, $this, $this->_instance);
+            }
         }
 
         $this->_context->injection($this->_instance, $this->_reflector);

@@ -32,13 +32,6 @@ class Context
     private static $_self = null;
 
     /**
-     * Debug mode enabled
-     *
-     * @var boolean
-     */
-    private $_debug = false;
-
-    /**
      * Context configuration
      *
      * @var array
@@ -65,23 +58,24 @@ class Context
     /**
      * Construct
      *
-     * @param array $config init application context configuration
+     * @param array $initConfig init application context configuration
      */
-    public function __construct($config = null)
+    public function __construct($initConfig = null)
     {
         // load family class
         require_once dirname(__FILE__) . '/Bean.php';
         require_once dirname(__FILE__) . '/BeanFactory.php';
 
-        // init default configuration
-        $this->_config['injectPropertyType'] =
-            \ReflectionProperty::IS_PRIVATE |
-            \ReflectionProperty::IS_PUBLIC |
-            \ReflectionProperty::IS_PROTECTED;
-
-        // extend config
-        if (is_array($config)) {
-            foreach ($config as $name => &$value) {
+        // extend config (init default configuration)
+        $this->_config = array(
+            'injectPropertyType' =>
+                \ReflectionProperty::IS_PRIVATE |
+                \ReflectionProperty::IS_PUBLIC |
+                \ReflectionProperty::IS_PROTECTED,
+            'debug' => false
+        );
+        if (is_array($initConfig)) {
+            foreach ($initConfig as $name => &$value) {
                 $this->_config[$name] = $value;
             }
         }
@@ -99,7 +93,7 @@ class Context
      */
     public function setDebug($enable)
     {
-        $this->_debug = $enable;
+        $this->_config['debug'] = $enable;
     }
 
     /**
@@ -111,7 +105,7 @@ class Context
     public function log($message)
     {
         // TODO: fire event
-        if ($this->_debug) {
+        if ($this->_config['debug']) {
             echo $message . "\n";
         }
     }
@@ -185,6 +179,18 @@ class Context
     }
 
     /**
+     * Get ReflectionClass by class name
+     *
+     * @param string $className
+     * @return \ReflectionClass
+     */
+    public function &getReflectionClass($className)
+    {
+        $className = $this->normalizeClassName($className);
+        return $this->_beanMapByClassName[$className]->getReflectionClass();
+    }
+
+    /**
      * Inject resource into instance
      *
      * @param Object           $bean
@@ -228,20 +234,31 @@ class Context
     /**
      * Share object instance to the interface
      *
-     * @param string $interfaceName
-     * @param string $beanFactory
+     * @param string       $interfaceName
+     * @param BeanFactory  $beanFactory
      */
-    public function makeInterfaceRefs($interfaceName, &$beanFactory)
+    public function makeInterfaceRefs($interfaceName, BeanFactory &$beanFactory)
     {
         $interfaceName = $this->normalizeClassName($interfaceName);
         // create interface map
-        if (!array_key_exists($interfaceName, $this->_beanMapByClassName)) {
+        if (!$this->hasRegister($interfaceName)) {
             $this->log('Make Interface Refs: ' . $interfaceName);
             $this->_beanMapByClassName[$interfaceName] = $beanFactory;
         } else {
             // After inject, bean instance already must to inject on here
             $this->_beanMapByClassName[$interfaceName]->setInstance($beanFactory->getInstance());
         }
+    }
+
+    /**
+     * Check class pr interface name was registered
+     *
+     * @param string $className
+     * @return bool
+     */
+    public function hasRegister($className)
+    {
+        return array_key_exists($className, $this->_beanMapByClassName);
     }
 
     /**

@@ -23,28 +23,41 @@ class Framework
     private $_runtime;
 
     /**
-     * PHP error report
-     * @var bool
-     */
-    private $_errorReport = true;
-
-    /**
      * execute timer
      * @var long
      */
     private $_startTime = 0;
 
-    public function __construct()
+    /**
+     * Framework constructor
+     *
+     * @param mixed $initConfig Configuration of framework [optional]
+     */
+    public function __construct($initConfig = null)
     {
+        // extend config
+        $config = array(
+            'PLUGINS_PATH' => __DIR__ . '/../../..',
+            'DISPLAY_ERROR' => false,
+            'DEFAULT_TIMEZONE' => 'UTC'
+        );
+        if (is_array($initConfig)) {
+            foreach ($initConfig as $key => &$value) {
+                $config[$key] = $value;
+            }
+        }
+
+        date_default_timezone_set($config['DEFAULT_TIMEZONE']);
+
         //Set start timestamp
         $this->_startTime = microtime();
 
-        //registe class loader manager
+        //register class loader manager
         require_once dirname(__FILE__) . '/EventHandleManager.php';
         EventHandleManager::register();
 
-        //Set PHP error report style
-        if ($this->_errorReport) {
+        //Set PHP error report
+        if ($config['displayError']) {
             error_reporting(E_ALL);
             ini_set('display_errors', '1');
         } else {
@@ -53,7 +66,7 @@ class Framework
         }
 
         //Constant setup
-        define ('PLUGINS_PATH', dirname(dirname(dirname(__FILE__))));
+        define ('PLUGINS_PATH', $config['pluginPath']);
 
     }
 
@@ -91,6 +104,7 @@ class Framework
         while (($pluginName = readdir($pluginsDir)) !== false) {
             if (substr($pluginName, 0, 1) !== '.') {
                 $this->_runtime->install(PLUGINS_PATH . '/' . $pluginName);
+                $this->_context->log('Install plugin: ' . PLUGINS_PATH . '/' . $pluginName);
             }
         }
         closedir($pluginsDir);
@@ -98,8 +112,9 @@ class Framework
         //auto start plugin
         $configs = $this->_runtime->getPluginsConfig();
         foreach ($configs as $pluginId => &$config) {
-            if (array_key_exists('AutoStart', $config) && $config['AutoStart']) {
+            if (array_key_exists('AutoStart', $config) && $config['AutoStart'] === true) {
                 $this->_runtime->start($pluginId);
+                $this->_context->log('Start plugin: ' . $pluginId);
             }
         }
 

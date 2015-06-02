@@ -9,13 +9,11 @@ namespace point\core;
  */
 class Bootstrap
 {
-    public function __construct()
+    public function __construct($config = null)
     {
         include_once dirname(__FILE__) . '/Context.php';
 
-        $context = new Context();
-
-        date_default_timezone_set('UTC');
+        $context = new Context($config);
 
         include_once dirname(__FILE__) . '/Framework.php';
 
@@ -23,6 +21,7 @@ class Bootstrap
             array(
                 array(
                     Bean::CLASS_NAME => '\point\core\Framework',
+                    Bean::CONSTRUCTOR_ARG => array($config)
                 )
             )
         );
