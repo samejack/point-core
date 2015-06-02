@@ -72,17 +72,18 @@ class Runtime
     }
 
     /**
-     * Install plugin and registe extension
+     * Install plugin and register extension
      *
-     * @param String $pluginId plugin id
-     * @return boolean success or fail
+     * @param string $pluginPath plugin id
+     * @return bool success or fail
+     * @throws \Exception
      */
     public function install($pluginPath)
     {
 
         $filename = $pluginPath . '/plugin.php';
         if (!is_file($filename)) {
-            die(sprintf('Plugin configuration file not found. (%s)', $filename));
+            throw new \Exception(sprintf('Plugin configuration file not found. (%s)', $filename));
         } else {
             // initial var
             $point = array();
@@ -93,7 +94,7 @@ class Runtime
         }
 
         if (!array_key_exists('SymbolicName', $point)) {
-            die('Plugin SymbolicName not defined.');
+            throw new \Exception('Plugin SymbolicName not defined.');
         } else {
             $pluginId = $point['SymbolicName'];
             $this->_plugins[$pluginId]['Status'] = Runtime::UNINSTALLED;
@@ -129,7 +130,7 @@ class Runtime
                                 $this->_extensions[$extensionName . '@' . $extPlugin][$pluginId][$key] = $value;
                             }
                         } elseif (!isset($this->_extensions)) {
-                            die('Can not registe Plugin Extension Point : Plugin "' . $extPlugin . '" not found!');
+                            throw new \Exception('Can not registe Plugin Extension Point : Plugin "' . $extPlugin . '" not found!');
                         } else {
                             array_push(
                                 $this->_extensions[$extensionName . '@' . $extPlugin],
@@ -150,15 +151,16 @@ class Runtime
     /**
      * Resolve plugin
      *
-     * @param String $pluginId plugin id
-     * @return boolean success or fail
+     * @param string $pluginId plugin id
+     * @return bool success or fail
+     * @throws \Exception
      */
     public function resolve($pluginId)
     {
 
         // load plugin configuration
         if (!array_key_exists($pluginId, $this->_plugins)) {
-            die(sprintf('Plugin can\'t resolved. Plugin id not found. (id=%s)', $pluginId));
+            throw new \Exception(sprintf('Plugin can\'t resolved. Plugin id not found. (id=%s)', $pluginId));
         }
 
         // TODO: plugin fragment
@@ -179,18 +181,17 @@ class Runtime
         return true;
     }
 
-
     /**
      * Start plugin
      *
-     * @param String plugin id
-     * @return void
+     * @param string $pluginId
+     * @throws \Exception
      */
     public function start($pluginId)
     {
 
         if (!array_key_exists($pluginId, $this->_plugins)) {
-            die(sprintf('Plugin not found. id=%s', $pluginId));
+            throw new \Exception(sprintf('Plugin not found. id=%s', $pluginId));
         }
 
         // resolve plugin self
@@ -245,7 +246,7 @@ class Runtime
     /**
      * Stop plugin
      *
-     * @param String plugin id
+     * @param string $pluginId plugin id
      */
     public function stop($pluginId)
     {
@@ -278,9 +279,9 @@ class Runtime
     /**
      * To obtain the absolute URL path by plugin id
      *
-     * @param String filename
-     * @param String plugin id
-     * @return String
+     * @param string $filename filename
+     * @param string $pluginId plugin id
+     * @return string
      */
     public function getResourceUrl($filename, $pluginId = null)
     {
@@ -308,7 +309,7 @@ class Runtime
     /**
      * Set runtime current plugin id
      *
-     * @param String $pluginId plugin id
+     * @param string $pluginId plugin id
      * @return void
      */
     public function setCurrentPluginId($pluginId)
@@ -322,7 +323,7 @@ class Runtime
     /**
      * Get runtime current plugin id
      *
-     * @return String plugin id
+     * @return string plugin id
      */
     public function getCurrentPluginId()
     {

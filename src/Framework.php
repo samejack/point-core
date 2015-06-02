@@ -74,11 +74,12 @@ class Framework
      * PRSP Launcher<br>
      * Install adn start plugins
      *
+     * @throw \Exception
      */
     public function launcher()
     {
 
-        //load familly class
+        //load family class
         require_once dirname(__FILE__) . '/Runtime.php';
         require_once dirname(__FILE__) . '/PlatformClassLoader.php';
 
@@ -98,7 +99,7 @@ class Framework
 
         //install plugin
         if (!is_dir(PLUGINS_PATH)) {
-            die('Plugin path not found : ' . PLUGINS_PATH);
+            throw new \Exception('Plugin path not found : ' . PLUGINS_PATH);
         }
         $pluginsDir = opendir(PLUGINS_PATH);
         while (($pluginName = readdir($pluginsDir)) !== false) {
