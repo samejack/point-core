@@ -23,7 +23,6 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
 
         $beanFactory = new BeanFactory(
             $context,
-            $config[Bean::CLASS_NAME],
             $config
         );
         $bar = $beanFactory->getInstance();
@@ -46,7 +45,6 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
 
         $beanFactory = new BeanFactory(
             $context,
-            $config[Bean::CLASS_NAME],
             $config
         );
         $bar = $beanFactory->getInstance();
@@ -68,7 +66,6 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
 
         $beanFactory = new BeanFactory(
             $context,
-            $config[Bean::CLASS_NAME],
             $config
         );
         $bar = $beanFactory->getInstance();
@@ -91,7 +88,6 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
 
         new BeanFactory(
             $context,
-            $config[Bean::CLASS_NAME],
             $config
         );
 
@@ -110,7 +106,6 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
 
         new BeanFactory(
             $context,
-            $config[Bean::CLASS_NAME],
             $config
         );
 
@@ -133,7 +128,6 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
 
         $beanFactory = new BeanFactory(
             $context,
-            $config[Bean::CLASS_NAME],
             $config
         );
 
@@ -156,7 +150,6 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
 
         $beanFactory = new BeanFactory(
             $context,
-            $config[Bean::CLASS_NAME],
             $config
         );
 
@@ -177,7 +170,6 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
 
         $beanFactory = new BeanFactory(
             $context,
-            $config[Bean::CLASS_NAME],
             $config
         );
 
@@ -201,7 +193,6 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
 
         $beanFactory = new BeanFactory(
             $context,
-            $config[Bean::CLASS_NAME],
             $config
         );
 
@@ -223,7 +214,6 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
         );
         $beanFactory = new BeanFactory(
             $context,
-            $config[Bean::CLASS_NAME],
             $config
         );
 

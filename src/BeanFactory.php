@@ -44,18 +44,15 @@ class BeanFactory
      * Construct
      *
      * @param Context            $_context           Point Application Context
-     * @param string             $className          Class or Interface Name
      * @param array              $configuration      Bean Configuration
      * @param \ReflectionClass   $reflector
      */
     public function __construct(
         Context &$_context,
-        $className,
         array &$configuration = null,
         \ReflectionClass &$reflector = null
     ) {
         $this->_context = $_context;
-        $this->_className = $className;
         if (is_array($configuration)) {
             $this->setConfiguration($configuration);
             $this->_reflector = $reflector;
@@ -79,6 +76,16 @@ class BeanFactory
     }
 
     /**
+     * Get bean configuration status
+     *
+     * @return bool
+     */
+    public function hasConfiguration()
+    {
+        return $this->_hasConfiguration;
+    }
+
+    /**
      * Get ReflectionClass of bean
      *
      * @return \ReflectionClass
@@ -91,7 +98,7 @@ class BeanFactory
     public function setConfiguration(&$configuration)
     {
         if ($this->_hasConfiguration) {
-            throw new \Exception('Has configuration already: ' . print_r($configuration, true));
+            throw new \Exception('Has configuration already: ' . $configuration[Bean::CLASS_NAME]);
         }
 
         // Set Class Name
@@ -163,14 +170,15 @@ class BeanFactory
      */
     private function _make()
     {
-        $this->_context->log("Instance Class: $this->_className");
+        $className = $this->_rawConfiguration[Bean::CLASS_NAME];
+        $this->_context->log('Instance Class: ' . $className);
+        if (is_null($this->_reflector)) {
+            $this->_reflector = new \ReflectionClass($className);
+        }
         if (isset($this->_rawConfiguration[Bean::CONSTRUCTOR_ARG]) && is_array($this->_rawConfiguration[Bean::CONSTRUCTOR_ARG])) {
-            if (is_null($this->_reflector)) {
-                $this->_reflector = new \ReflectionClass($this->_className);
-            }
             return $this->_reflector->newInstanceArgs($this->_rawConfiguration[Bean::CONSTRUCTOR_ARG]);
         }
-        return new $this->_className();
+        return new $className();
     }
 
     /**

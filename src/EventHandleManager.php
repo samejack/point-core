@@ -68,7 +68,7 @@ class EventHandleManager
      * @param Exception $exception
      * @return boolean
      */
-    public static function fireExceptionHandler($exception)
+    public static function fireExceptionHandler(\Exception &$exception)
     {
         if (count(self::$_exceptionHanlders) > 0) {
             foreach (self::$_exceptionHanlders as &$handler) {
