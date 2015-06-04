@@ -65,7 +65,7 @@ class EventHandleManager
     /**
      * Exception handler
      *
-     * @param Exception $exception
+     * @param \Exception $exception
      * @return boolean
      */
     public static function fireExceptionHandler(\Exception &$exception)

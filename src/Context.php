@@ -122,12 +122,6 @@ class Context
             if (!array_key_exists($className, $this->_beanMapByClassName)) {
                 // make a new bean repository
                 $this->_instanceBeanFactoryByClassName($className, $configuration);
-//            } else if (array_key_exists(Bean::ID, $configuration)) {
-//                if (isset($this->_beanMapById[$configuration[Bean::ID]])) {
-//                    throw new \Exception('Bead id is already existed: ' . $configuration[Bean::ID]);
-//                }
-//                // make a new bean repository
-//                $this->_instanceBeanFactoryByClassName($className, $configuration);
             } else if (!$this->_beanMapByClassName[$className]->hasConfiguration()) {
                 // create and update configuration
                 $this->_beanMapByClassName[$className]->setConfiguration($configuration);
