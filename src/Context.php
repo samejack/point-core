@@ -119,8 +119,14 @@ class Context
     {
         foreach ($configurations as &$configuration) {
             $className = $this->normalizeClassName($configuration[Bean::CLASS_NAME]);
+
             if (!array_key_exists($className, $this->_beanMapByClassName)) {
                 // make a new bean repository
+                $this->_instanceBeanFactoryByClassName($className, $configuration);
+            } else if (isset($configuration[Bean::ID])
+                && !isset($this->_beanMapById[$configuration[Bean::ID]])
+            ) {
+                // make a new bean with different bean ID
                 $this->_instanceBeanFactoryByClassName($className, $configuration);
             } else if (!$this->_beanMapByClassName[$className]->hasConfiguration()) {
                 // create and update configuration

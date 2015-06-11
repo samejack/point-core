@@ -237,15 +237,25 @@ class BeanFactory
                 if (!is_string($value)) {
                     throw new \Exception('Property value not a string.');
                 }
-                // property member inject
+                // property member inject (include prefix _)
                 if ($this->_reflector->hasProperty($name)) {
                     $property = $this->_reflector->getProperty($name);
-                    $property->setAccessible(true);
-                    $property->setValue($this->_instance, $value);
+                    if ($property->isPrivate() || $property->isProtected()) {
+                        $property->setAccessible(true);
+                        $property->setValue($this->_instance, $value);
+                        $property->setAccessible(false);
+                    } else {
+                        $property->setValue($this->_instance, $value);
+                    }
                 } elseif ($this->_reflector->hasProperty('_' . $name)) {
                     $property = $this->_reflector->getProperty('_' . $name);
-                    $property->setAccessible(true);
-                    $property->setValue($this->_instance, $value);
+                    if ($property->isPrivate() || $property->isProtected()) {
+                        $property->setAccessible(true);
+                        $property->setValue($this->_instance, $value);
+                        $property->setAccessible(false);
+                    } else {
+                        $property->setValue($this->_instance, $value);
+                    }
                 }
             }
         }
