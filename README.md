@@ -3,6 +3,25 @@
 ## Overview
 This is a PHP IoC/DI Module Container.It can inject instance of object through the @Annotation on PHPDoc.
 
+## Features
+* Dependency injection
+* Inversion of control
+* Lazy loading
+* Annotation config
+
+## Annotaion Specification
+| Annotation / Config | Description                |
+| :-------------      | :-------------             |
+| @Autowired          | Auto inject                |
+| @var                | Mapping by Class or Interface |
+| @Qualifier          | Inject by identify         |
+| INIT-METHOD         | Initialize invoke function |
+| SCOPE               | Instance mode (prototype or singleton) |
+| CONSTRUCTOR_ARG     | Constructor argunet        |
+| PROPERTY            | Set default property       |
+| AUTO_LOAD           | Auto load class            |
+
+
 example:
 
   
@@ -39,3 +58,6 @@ example:
     
     $foo = $context->getBeanByClassName('Foo');
     echo get_object($foo->getBar());  // print Bar
+
+## License
+Apache License 2.0
