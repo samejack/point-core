@@ -143,7 +143,7 @@ class BeanFactory
     public function &getInstance()
     {
         // TODO: non-singleton @Scope(singleton/prototype) anotation
-        if (is_null($this->_instance) && $this->_hasConfiguration) {
+        if (is_null($this->_instance) && $this->hasConfiguration()) {
             if (!$this->_included && isset($this->_rawConfiguration[Bean::INCLUDE_PATH])) {
                 $this->_included = true;
                 include_once($this->_rawConfiguration[Bean::INCLUDE_PATH]);
@@ -171,14 +171,15 @@ class BeanFactory
     private function _make()
     {
         $className = $this->_rawConfiguration[Bean::CLASS_NAME];
-        $this->_context->log('Instance Class: ' . $className);
+        $this->_context->log('[BeanFactory] Instance Class: ' . $className);
         if (is_null($this->_reflector)) {
             $this->_reflector = new \ReflectionClass($className);
         }
         if (isset($this->_rawConfiguration[Bean::CONSTRUCTOR_ARG]) && is_array($this->_rawConfiguration[Bean::CONSTRUCTOR_ARG])) {
             return $this->_reflector->newInstanceArgs($this->_rawConfiguration[Bean::CONSTRUCTOR_ARG]);
+        } else {
+            return $this->_reflector->newInstance();
         }
-        return new $className();
     }
 
     /**

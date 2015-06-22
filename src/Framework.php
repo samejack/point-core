@@ -105,7 +105,7 @@ class Framework
         while (($pluginName = readdir($pluginsDir)) !== false) {
             if (substr($pluginName, 0, 1) !== '.') {
                 $this->_runtime->install(PLUGINS_PATH . '/' . $pluginName);
-                $this->_context->log('Install plugin: ' . PLUGINS_PATH . '/' . $pluginName);
+                $this->_context->log('[Framework] Install plugin: ' . PLUGINS_PATH . '/' . $pluginName);
             }
         }
         closedir($pluginsDir);
@@ -115,7 +115,7 @@ class Framework
         foreach ($configs as $pluginId => &$config) {
             if (array_key_exists('AutoStart', $config) && $config['AutoStart'] === true) {
                 $this->_runtime->start($pluginId);
-                $this->_context->log('Start plugin: ' . $pluginId);
+                $this->_context->log('[Framework] Start plugin: ' . $pluginId);
             }
         }
 
