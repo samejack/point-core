@@ -10,16 +10,21 @@ This is a PHP IoC/DI Module Container.It can inject instance of object through t
 * Annotation config
 
 ## Annotaion Specification
-| Annotation / Config | Description                |
+| Annotation          | Description                |
 | :-------------      | :-------------             |
 | @Autowired          | Auto inject                |
 | @var                | Mapping by Class or Interface |
 | @Qualifier          | Inject by identify         |
+
+## Bean Configuration
+| Configuration       | Description                |
+| :-------------      | :-------------             |
 | INIT-METHOD         | Initialize invoke function |
 | SCOPE               | Instance mode (prototype or singleton) |
 | CONSTRUCTOR_ARG     | Constructor argunet        |
 | PROPERTY            | Set default property       |
 | AUTO_LOAD           | Auto load class            |
+| INCLUDE_PATH        | Auto include file path     |
 
 
 example:
@@ -52,7 +57,7 @@ example:
         Bean::CLASS_NAME => 'Foo'
       ),
       array(
-          Bean::CLASS_NAME => 'Bar'
+        Bean::CLASS_NAME => 'Bar'
       )
     ));
     
