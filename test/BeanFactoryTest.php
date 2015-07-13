@@ -36,13 +36,11 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
     {
 
         $context = new Context();
-
         $config = array(
             Bean::CLASS_NAME => '\point\core\test\Bar',
             Bean::INCLUDE_PATH => __DIR__ . '/TestClass/Bar.php',
             Bean::INIT_METHOD => array('autoInit')
         );
-
         $beanFactory = new BeanFactory(
             $context,
             $config
@@ -51,6 +49,23 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNull($bar->getData());
         $this->assertTrue($bar->autoInit);
+
+        // error
+        $context = new Context();
+        $config = array(
+            Bean::CLASS_NAME => '\point\core\test\Bar',
+            Bean::INCLUDE_PATH => __DIR__ . '/TestClass/Bar.php',
+            Bean::INIT_METHOD => array('autoInitFail')
+        );
+        $beanFactory = new BeanFactory(
+            $context,
+            $config
+        );
+        try {
+            $beanFactory->getInstance();
+        } catch (\Exception $exception) {
+            $this->assertEquals(get_class($exception), 'Exception');
+        }
     }
 
     public function testGetInstanceInitMethodWithParameter()
@@ -220,5 +235,53 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($beanFactory->getInstance()->arg1, $config[Bean::CONSTRUCTOR_ARG][0]);
         $this->assertEquals($beanFactory->getInstance()->arg2[0], $config[Bean::CONSTRUCTOR_ARG][1][0]);
         $this->assertEquals($beanFactory->getInstance()->arg2[1], $config[Bean::CONSTRUCTOR_ARG][1][1]);
+    }
+
+    public function testHasInstance()
+    {
+        $context = new Context();
+        $config = array(
+            Bean::CLASS_NAME => '\point\core\test\ConstructorArgs',
+            Bean::INCLUDE_PATH => __DIR__ . '/TestClass/ConstructorArgs.php',
+            Bean::CONSTRUCTOR_ARG => array('STRING', array('MY', 'NAME'))
+        );
+        $beanFactory = new BeanFactory(
+            $context,
+            $config
+        );
+
+        $this->assertFalse($beanFactory->hasInstanced());
+        $beanFactory->getInstance();
+        $this->assertTrue($beanFactory->hasInstanced());
+    }
+
+    public function testSetConfiguration()
+    {
+        $context = new Context();
+        $config = array(
+            Bean::CLASS_NAME => '\point\core\test\ConstructorArgs',
+            Bean::INCLUDE_PATH => __DIR__ . '/TestClass/ConstructorArgs.php',
+            Bean::CONSTRUCTOR_ARG => array('STRING', array('MY', 'NAME'))
+        );
+        $beanFactory = new BeanFactory(
+            $context,
+            $config
+        );
+        try {
+            $beanFactory->setConfiguration($config);
+        } catch (\Exception $exception) {
+            $this->assertEquals(get_class($exception), 'Exception');
+        }
+
+        $errorConfig = array();
+        $beanFactory = new BeanFactory(
+            $context
+        );
+        try {
+            $beanFactory->setConfiguration($errorConfig);
+        } catch (\Exception $exception) {
+            $this->assertEquals(get_class($exception), 'Exception');
+        }
+
     }
 }
