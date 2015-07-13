@@ -9,7 +9,7 @@ php:
 env:
 
 before_script:
- - wget http://getcomposer.org/composer.phar
+ - curl -s http://getcomposer.org/installer | php
  - php composer.phar install --dev --no-interaction
 
 script:
