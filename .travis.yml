@@ -15,10 +15,7 @@ before_script:
 
 script:
  - mkdir -p build/logs
- - php vendor/bin/phpcs --report=checkstyle --report-file=build/logs/checkstyle.xml --standard=build/config/phpcs.xml --ignore=config.php src
- - php vendor/bin/phpunit -c ./test/phpunit.xml
+ - phpunit --configuration ./test/phpunit.xml --coverage-clover build/logs/clover.xml
 
 after_script:
- - curl -s https://gist.github.com/satooshi/4958909/raw > build/checkstyle.php
- - php build/checkstyle.php
  - php vendor/bin/coveralls -v --exclude-no-stmt
