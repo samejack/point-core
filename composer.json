@@ -4,12 +4,21 @@
   "keywords": ["framework", "point-core", "php"],
   "license": "Apache-2.0",
   "type": "project",
+  "authors": [
+    {
+      "name": "SJ",
+      "email": "sj@toright.com",
+      "homepage": "http://blog.toright.com",
+      "role": "Developer"
+    }
+  ],
   "require": {
     "php": ">=5.3.0"
   },
   "require-dev": {
      "php": ">=5.3.0",
-     "phpunit/phpunit": "3.7.*",
+     "phpunit/phpunit": "3.7.*@stable",
+     "squizlabs/php_codesniffer": "1.4.*@stable",
      "satooshi/php-coveralls": "dev-master"
   },
   "autoload": {
@@ -18,13 +27,5 @@
       "point\\core\\": "src/"
     },
     "files": ["Autoloader.php"]
-  },
-  "authors": [
-    {
-      "name": "SJ",
-      "email": "sj@toright.com",
-      "homepage": "http://blog.toright.com",
-      "role": "Developer"
-    }
-  ]
+  }
 }
