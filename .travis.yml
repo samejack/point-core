@@ -19,6 +19,6 @@ script:
  - php vendor/bin/phpunit -c ./test/phpunit.xml
 
 after_script:
- - curl -s https://gist.github.com/satooshi/4958909/raw > travis/checkstyle.php
- - php travis/checkstyle.php
+ - curl -s https://gist.github.com/satooshi/4958909/raw > build/checkstyle.php
+ - php build/checkstyle.php
  - php vendor/bin/coveralls -v --exclude-no-stmt

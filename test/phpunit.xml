@@ -1,8 +1,16 @@
-<phpunit bootstrap="./bootstrap.php">
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false"
+         syntaxCheck="false"
+         bootstrap="./bootstrap.php">
     <testsuites>
-        <testsuite name="Core">
-            <file>ContextTest.php</file>
-            <file>BeanFactoryTest.php</file>
+        <testsuite name="PHP Coveralls component test suite">
+            <directory>./</directory>
         </testsuite>
     </testsuites>
 
