@@ -17,7 +17,7 @@
     "psr-4": {
       "point\\core\\": "src/"
     },
-    "files": ["src/Autoloader.php"]
+    "files": ["Autoloader.php"]
   },
   "authors": [
     {
