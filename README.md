@@ -7,7 +7,7 @@ This is a PHP IoC/DI Module Container.It can inject instance of object through t
 * Dependency injection
 * Inversion of control
 * Lazy loading
-* Annotation config
+* Annotation configuration
 
 ## Annotaion Specification
 | Annotation          | Description                |
