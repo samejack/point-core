@@ -1,3 +1,5 @@
 /vendor/
 *.gitconfig
 /.idea/
+/build/logs/
+/build/coverage/
