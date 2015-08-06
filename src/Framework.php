@@ -50,14 +50,14 @@ class Framework
         date_default_timezone_set($config['DEFAULT_TIMEZONE']);
 
         //Set start timestamp
-        $this->_startTime = microtime();
+        $this->_startTime = microtime(true);
 
         //register class loader manager
         require_once dirname(__FILE__) . '/EventHandleManager.php';
         EventHandleManager::register();
 
         //Set PHP error report
-        if ($config['displayError']) {
+        if ($config['DISPLAY_ERROR']) {
             error_reporting(E_ALL);
             ini_set('display_errors', '1');
         } else {
@@ -71,7 +71,7 @@ class Framework
     }
 
     /**
-     * PRSP Launcher<br>
+     * Point Framework Launcher<br>
      * Install adn start plugins
      *
      * @throw \Exception
@@ -134,6 +134,6 @@ class Framework
      */
     public function getExecuteTime()
     {
-        return microtime() - $this->getStartTime();
+        return microtime(true) - $this->getStartTime();
     }
 }

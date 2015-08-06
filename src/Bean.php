@@ -10,13 +10,41 @@ namespace point\core;
  */
 class Bean
 {
+    /**
+     * Class name
+     */
     const CLASS_NAME = 'class';
+
+    /**
+     * Auto invoke method on class instance
+     */
     const INIT_METHOD = 'init-method';
-    const CONSTRUCTOR_ARG = 'constructor-arg'; // TODO: not implement
+
+    /**
+     * Class instance arguments
+     */
+    const CONSTRUCTOR_ARG = 'constructor-arg';
+
+    /**
+     * Configuration of properties inject
+     */
     const PROPERTY = 'property';
+
+    /**
+     * Setup bean auto loading on config
+     */
     const AUTO_LOAD = 'auto-load';
+
+    /**
+     * Class file include path
+     */
     const INCLUDE_PATH = 'include-path';
+
+    /**
+     * Bean ID
+     */
     const ID = 'id';
+
     /**
      * Instance scope: singleton|prototype
      */
