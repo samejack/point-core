@@ -102,7 +102,7 @@ class Context
     {
         // TODO: fire event
         if ($this->_config['debug']) {
-            echo $message . "\n";
+            echo '[' . debug_backtrace()[1]['class'] . '] ' . $message . "\n";
         }
     }
 
