@@ -39,6 +39,7 @@ class Framework
         $config = array(
             'PLUGINS_PATH' => __DIR__ . '/../../..',
             'DISPLAY_ERROR' => false,
+            'DISPLAY_ERROR_LEVEL' => E_ALL,
             'DEFAULT_TIMEZONE' => 'UTC'
         );
         if (is_array($initConfig)) {
@@ -58,7 +59,7 @@ class Framework
 
         //Set PHP error report
         if ($config['DISPLAY_ERROR']) {
-            error_reporting(E_ALL);
+            error_reporting($config['DISPLAY_ERROR_LEVEL']);
             ini_set('display_errors', '1');
         } else {
             error_reporting(0);
@@ -80,8 +81,8 @@ class Framework
     {
 
         //load family class
-        require_once dirname(__FILE__) . '/Runtime.php';
-        require_once dirname(__FILE__) . '/PlatformClassLoader.php';
+        require_once __DIR__ . '/Runtime.php';
+        require_once __DIR__ . '/PlatformClassLoader.php';
 
         $beans = array(
             array(
