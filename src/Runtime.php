@@ -157,6 +157,7 @@ class Runtime
      */
     public function resolve($pluginId)
     {
+        $this->_context->log('Resolve plugin: ' . $pluginId);
 
         // load plugin configuration
         if (!array_key_exists($pluginId, $this->_plugins)) {
@@ -173,7 +174,9 @@ class Runtime
 
         // load beans
         if (array_key_exists('Beans', $this->_plugins[$pluginId])) {
+            $this->setCurrentPluginId($pluginId);
             $this->_context->addConfiguration($this->_plugins[$pluginId]['Beans']);
+            $this->restoreCurrentPluginId();
         }
 
         $this->_plugins[$pluginId]['Status'] = Runtime::RESOLVED;
@@ -190,6 +193,7 @@ class Runtime
      */
     public function start($pluginId)
     {
+        $this->_context->log('Start plugin: ' . $pluginId);
 
         if (!array_key_exists($pluginId, $this->_plugins)) {
             throw new \Exception(sprintf('Plugin not found. id=%s', $pluginId));
@@ -318,6 +322,9 @@ class Runtime
         if (!is_null($this->_currentPluginId)) {
             array_push($this->_currentPluginIdHistory, $this->_currentPluginId);
         }
+        $this->_context->log(
+            'Plugin stack(' . count($this->_currentPluginIdHistory) .'): ' . $pluginId
+        );
         $this->_currentPluginId = $pluginId;
     }
 
