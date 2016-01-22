@@ -17,7 +17,6 @@ class BeanFactory
     private static $_KEY_R_BEAN = 'KEY_R_BEAN';
     private static $_KEY_R_PROPERTY = 'KEY_R_PROPERTY';
 
-    private $_className;
     private $_instance = null;
     private $_initMethods = array();
     private $_dependencyInjectionBeans = array();
@@ -148,8 +147,10 @@ class BeanFactory
                 $this->_included = true;
                 include_once($this->_rawConfiguration[Bean::INCLUDE_PATH]);
             }
+
             $object = $this->_make();
             $this->setInstance($object);
+            $this->_context->log('Singleton scope ready: ' . get_class($object));
             return $this->_instance;
         }
 
@@ -157,6 +158,7 @@ class BeanFactory
         if (isset($this->_rawConfiguration[Bean::SCOPE])
             && $this->_rawConfiguration[Bean::SCOPE] === Bean::SCOPE_PROTOTYPE) {
             $object = $this->_make();
+            $this->_context->log('Prototype scope ready: ' . get_class($object));
             $this->setInstance($object);
         }
 
@@ -171,11 +173,14 @@ class BeanFactory
     private function _make()
     {
         $className = $this->_rawConfiguration[Bean::CLASS_NAME];
-        $this->_context->log('[BeanFactory] Instance Class: ' . $className);
+        $this->_context->log('Instance Class: ' . $className);
         if (is_null($this->_reflector)) {
             $this->_reflector = new \ReflectionClass($className);
         }
-        if (isset($this->_rawConfiguration[Bean::CONSTRUCTOR_ARG]) && is_array($this->_rawConfiguration[Bean::CONSTRUCTOR_ARG])) {
+        if (isset($this->_rawConfiguration[Bean::CONSTRUCTOR_ARG])) {
+            if (!is_array($this->_rawConfiguration[Bean::CONSTRUCTOR_ARG])) {
+                throw new \Exception('CONSTRUCTOR_ARG not a array.');
+            }
             return $this->_reflector->newInstanceArgs($this->_rawConfiguration[Bean::CONSTRUCTOR_ARG]);
         } else {
             return $this->_reflector->newInstance();
@@ -195,13 +200,14 @@ class BeanFactory
             $property->setAccessible(true);
             $property->setValue($bean, $this->_instance);
         } else {
-            $this->_context->log(
-                'Record inject stage: ' . get_class($bean) . '->' . $property->getName() . ' :: ' . $this->_className
-            );
             array_push($this->_dependencyInjectionBeans, array(
                 self::$_KEY_R_BEAN => $bean,
                 self::$_KEY_R_PROPERTY => $property
             ));
+            $this->_context->log(
+                'Record inject stage(' . count($this->_dependencyInjectionBeans) . '): ' .
+                get_class($bean) . '->' . $property->getName()
+            );
         }
     }
 

@@ -102,7 +102,12 @@ class Context
     {
         // TODO: fire event
         if ($this->_config['debug']) {
-            echo '[' . debug_backtrace()[1]['class'] . '] ' . $message . "\n";
+            $className = debug_backtrace()[1]['class'];
+            $space = ' ';
+            if (strlen($className) < 24) {
+                $space = str_repeat(' ', 24 - strlen($className));
+            }
+            echo '[' . debug_backtrace()[1]['class'] . ']' . $space . $message . "\n";
         }
     }
 
@@ -228,7 +233,7 @@ class Context
                     if (!array_key_exists($matches[1], $this->_beanMapById)) {
                         //TODO: How to create BeanFactory instance
 
-                        $this->log('[Context] GG!!');
+                        $this->log('GG!!');
                     } else {
                         $this->_beanMapById[$matches[1]]->inject($bean, $property);
                     }
@@ -255,6 +260,7 @@ class Context
             $this->_beanMapByClassName[$interfaceName] = $beanFactory;
         } else if (!$this->_beanMapByClassName[$interfaceName]->hasInstanced()) {
             // After inject, bean instance already must to inject on here
+            $this->log('Inject Interface: ' . $interfaceName);
             $this->_beanMapByClassName[$interfaceName]->setInstance($intanceRef);
         }
     }
@@ -283,11 +289,11 @@ class Context
         $configuration = null,
         \ReflectionClass &$reflector = null
     ) {
-        $this->log('[Context] Create BeanFactory by ClassName = ' . $className);
+        $this->log('Create BeanFactory by ClassName = ' . $className);
         $beanFactory = new BeanFactory($this, $configuration, $reflector);
 
         // set to class name hash table
-        $this->log('[Context] Set bean map by ClassName = ' . $className);
+        $this->log('Set bean map by ClassName = ' . $className);
         $this->_beanMapByClassName[$className] = &$beanFactory;
 
         // set to id hash table
@@ -295,7 +301,7 @@ class Context
             if (isset($this->_beanMapById[$configuration[Bean::ID]])) {
                 throw new \Exception('Bean id is already existed: ' . $configuration[Bean::ID]);
             }
-            $this->log('[Context] Set bean map by ID = ' . $configuration[Bean::ID]);
+            $this->log('Set bean map by ID = ' . $configuration[Bean::ID]);
             $this->_beanMapById[$configuration[Bean::ID]] = &$beanFactory;
         }
     }
