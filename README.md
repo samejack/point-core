@@ -4,10 +4,11 @@
 This is a PHP IoC/DI Module Container.It can inject instance of object through the @Annotation on PHPDoc.
 
 ## Features
-* Dependency injection
-* Inversion of control
-* Lazy loading
-* Annotation configuration
+* Dependency Injection
+* Inversion of Control
+* File/Class Lazy Loading
+* Configuration by PHP Annotation
+* Rich Module Framework
 
 ## Annotaion Specification
 | Annotation          | Description                |
@@ -19,12 +20,12 @@ This is a PHP IoC/DI Module Container.It can inject instance of object through t
 ## Bean Configuration
 | Configuration       | Description                |
 | :-------------      | :-------------             |
-| INIT-METHOD         | Initialize invoke function |
-| SCOPE               | Instance mode (prototype or singleton) |
-| CONSTRUCTOR_ARG     | Constructor argunet        |
-| PROPERTY            | Set default property       |
-| AUTO_LOAD           | Auto load class            |
-| INCLUDE_PATH        | Auto include file path     |
+| Bean::INIT-METHOD         | Initialize invoke function |
+| Bean::SCOPE               | Instance mode (prototype or singleton) |
+| Bean::CONSTRUCTOR_ARG     | Constructor argunet        |
+| Bean::PROPERTY            | Set default property       |
+| Bean::AUTO_LOAD           | Auto load class            |
+| Bean::INCLUDE_PATH        | Auto include file path     |
 
 
 PHP Example:
