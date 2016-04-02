@@ -238,7 +238,9 @@ class BeanFactory
         $this->_context->injection($this->_instance, $this->_reflector);
 
         // set properties
-        if (array_key_exists(Bean::PROPERTY, $this->_rawConfiguration)) {
+        if (is_array($this->_rawConfiguration)
+            && array_key_exists(Bean::PROPERTY, $this->_rawConfiguration)
+        ) {
             foreach ($this->_rawConfiguration[Bean::PROPERTY] as $name => &$value) {
                 // TODO: implement other type
                 if (!is_string($value)) {
