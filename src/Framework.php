@@ -33,22 +33,20 @@ class Framework
      *
      * @param mixed $initConfig Configuration of framework [optional]
      */
-    public function __construct($initConfig = null)
+    public function __construct(array $initConfig = null)
     {
         // extend config
         $config = array(
-            'PLUGINS_PATH' => __DIR__ . '/../../..',
-            'DISPLAY_ERROR' => false,
-            'DISPLAY_ERROR_LEVEL' => E_ALL,
-            'DEFAULT_TIMEZONE' => 'UTC'
+            'pluginPath' => __DIR__ . '/../../..',
+            'displayError' => false,
+            'displayErrorLevel' => E_ALL,
+            'defaultTimeZone' => 'UTC'
         );
-        if (is_array($initConfig)) {
-            foreach ($initConfig as $key => &$value) {
-                $config[$key] = $value;
-            }
+        foreach ($initConfig as $key => &$value) {
+            $config[$key] = $value;
         }
 
-        date_default_timezone_set($config['DEFAULT_TIMEZONE']);
+        date_default_timezone_set($config['defaultTimeZone']);
 
         //Set start timestamp
         $this->_startTime = microtime(true);
@@ -58,8 +56,8 @@ class Framework
         EventHandleManager::register();
 
         //Set PHP error report
-        if ($config['DISPLAY_ERROR']) {
-            error_reporting($config['DISPLAY_ERROR_LEVEL']);
+        if ($config['displayError'] === true) {
+            error_reporting($config['displayErrorLevel']);
             ini_set('display_errors', '1');
         } else {
             error_reporting(0);
@@ -68,7 +66,6 @@ class Framework
 
         //Constant setup
         define ('PLUGINS_PATH', $config['pluginPath']);
-
     }
 
     /**
