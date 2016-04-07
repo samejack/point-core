@@ -42,8 +42,10 @@ class Framework
             'displayErrorLevel' => E_ALL,
             'defaultTimeZone' => 'UTC'
         );
-        foreach ($initConfig as $key => &$value) {
-            $config[$key] = $value;
+        if (!is_null($initConfig)) {
+            foreach ($initConfig as $key => &$value) {
+                $config[$key] = $value;
+            }
         }
 
         date_default_timezone_set($config['defaultTimeZone']);
