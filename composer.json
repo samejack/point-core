@@ -1,7 +1,7 @@
 {
-  "name": "point/point-core",
+  "name": "samejack/point-core",
   "description": "PHP IoC/DI Container Framework",
-  "keywords": ["framework", "point-core", "php"],
+  "keywords": ["framework", "point-core", "php", "IoC/DI"],
   "license": "Apache-2.0",
   "type": "project",
   "authors": [
