@@ -169,6 +169,7 @@ class BeanFactory
      * Instance class
      *
      * @return object
+     * @throws \Exception
      */
     private function _make()
     {
@@ -247,17 +248,13 @@ class BeanFactory
                     throw new \Exception('Property value not a string.');
                 }
                 // property member inject (include prefix _)
+                $property = null;
                 if ($this->_reflector->hasProperty($name)) {
                     $property = $this->_reflector->getProperty($name);
-                    if ($property->isPrivate() || $property->isProtected()) {
-                        $property->setAccessible(true);
-                        $property->setValue($this->_instance, $value);
-                        $property->setAccessible(false);
-                    } else {
-                        $property->setValue($this->_instance, $value);
-                    }
-                } elseif ($this->_reflector->hasProperty('_' . $name)) {
+                } else if ($this->_reflector->hasProperty('_' . $name)) {
                     $property = $this->_reflector->getProperty('_' . $name);
+                }
+                if (!is_null($property)) {
                     if ($property->isPrivate() || $property->isProtected()) {
                         $property->setAccessible(true);
                         $property->setValue($this->_instance, $value);

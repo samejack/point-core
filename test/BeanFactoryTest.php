@@ -70,7 +70,6 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testGetInstanceInitMethodWithParameter()
     {
-
         $context = new Context();
 
         $config = array(
@@ -127,17 +126,37 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull(Autoload::$INSTANCE);
     }
 
+    public function testGetReflectionClass()
+    {
+        $context = new Context();
+
+        $config = array(
+            Bean::CLASS_NAME => '\point\core\test\Bar',
+            Bean::INCLUDE_PATH => __DIR__ . '/TestClass/Bar.php',
+            Bean::INIT_METHOD => array('autoInit', 'setData' => array('Test_Input_Parameter'))
+        );
+
+        $beanFactory = new BeanFactory(
+            $context,
+            $config
+        );
+        $reflectionClass = $beanFactory->getReflectionClass();
+
+        $this->assertEquals($reflectionClass, null);
+    }
+
     public function testPropertySet()
     {
-
         $context = new Context();
 
         $config = array(
             Bean::CLASS_NAME => '\point\core\test\Property',
             Bean::INCLUDE_PATH => __DIR__ . '/TestClass/Property.php',
             Bean::PROPERTY => array (
-                'priVar' => 'INJECT_STRING_1',
-                'pubVar' => 'INJECT_STRING_2'
+                '_priVar'       => 'INJECT_STRING_1',
+                'pubVar'        => 'INJECT_STRING_2',
+                'autoUnderLine' => 'INJECT_STRING_3',
+                '_protectedVar' => 'INJECT_STRING_4',
             )
         );
 
@@ -149,9 +168,37 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
         $property = $beanFactory->getInstance();
 
         $vars = $property->getVars();
-        $this->assertEquals($vars['_priVar'], $config[Bean::PROPERTY]['priVar']);
+        $this->assertEquals($vars['_priVar'], $config[Bean::PROPERTY]['_priVar']);
         $this->assertEquals($vars['pubVar'], $config[Bean::PROPERTY]['pubVar']);
+        $this->assertEquals($vars['_autoUnderLine'], $config[Bean::PROPERTY]['autoUnderLine']);
+        $this->assertEquals($vars['_protectedVar'], $config[Bean::PROPERTY]['_protectedVar']);
+    }
 
+    public function testPropertySetException()
+    {
+        $context = new Context();
+
+        $config = array(
+            Bean::CLASS_NAME => '\point\core\test\Property',
+            Bean::INCLUDE_PATH => __DIR__ . '/TestClass/Property.php',
+            Bean::PROPERTY => array (
+                'priVar' => array()
+            )
+        );
+
+        $beanFactory = new BeanFactory(
+            $context,
+            $config
+        );
+
+        $catchException = null;
+        try {
+            $beanFactory->getInstance();
+        } catch (\Exception $exception) {
+            $catchException = $exception;
+        }
+
+        $this->assertEquals($catchException->getMessage(), 'Property value not a string.');
     }
 
     public function testScopeSingleton()
@@ -235,6 +282,28 @@ class BeanFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($beanFactory->getInstance()->arg1, $config[Bean::CONSTRUCTOR_ARG][0]);
         $this->assertEquals($beanFactory->getInstance()->arg2[0], $config[Bean::CONSTRUCTOR_ARG][1][0]);
         $this->assertEquals($beanFactory->getInstance()->arg2[1], $config[Bean::CONSTRUCTOR_ARG][1][1]);
+    }
+
+    public function testConstructorArgsException()
+    {
+        $context = new Context();
+        $config = array(
+            Bean::CLASS_NAME => '\point\core\test\ConstructorArgs',
+            Bean::INCLUDE_PATH => __DIR__ . '/TestClass/ConstructorArgs.php',
+            Bean::CONSTRUCTOR_ARG => 'GG!!'
+        );
+        $beanFactory = new BeanFactory(
+            $context,
+            $config
+        );
+
+        $catchException = null;
+        try {
+            $beanFactory->getInstance();
+        } catch (\Exception $exception) {
+            $catchException = $exception;
+        }
+        $this->assertEquals($catchException->getMessage(), 'CONSTRUCTOR_ARG not a array.');
     }
 
     public function testHasInstance()
