@@ -19,9 +19,8 @@ class PlatformClassLoader
      * Class auto load
      *
      * @param String $fullClassName
-     * @return boolean
-     *  true: load class success
-     *  false: class not found
+     * @return bool   load class success or class not found
+     * @throws \Exception
      */
     public function loadClass($fullClassName)
     {

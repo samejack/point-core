@@ -135,4 +135,24 @@ class Framework
     {
         return microtime(true) - $this->getStartTime();
     }
+
+    /**
+     * Get application context
+     *
+     * @return Context
+     */
+    public function getContext()
+    {
+        return $this->_context;
+    }
+
+    /**
+     * Get runtime
+     *
+     * @return Runtime
+     */
+    public function getRuntime()
+    {
+        return $this->_runtime;
+    }
 }
