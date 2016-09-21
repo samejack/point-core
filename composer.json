@@ -22,10 +22,8 @@
      "satooshi/php-coveralls": "dev-master"
   },
   "autoload": {
-    "classmap": [],
     "psr-4": {
       "point\\core\\": "src/"
-    },
-    "files": ["Autoloader.php"]
+    }
   }
 }
