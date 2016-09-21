@@ -3,12 +3,12 @@
   "description": "PHP IoC/DI Container Framework",
   "keywords": ["framework", "point-core", "php", "IoC/DI"],
   "license": "Apache-2.0",
-  "type": "project",
+  "type": "library",
   "authors": [
     {
       "name": "SJ",
       "email": "sj@toright.com",
-      "homepage": "http://blog.toright.com",
+      "homepage": "https://github.com/samejack/point-core",
       "role": "Developer"
     }
   ],
@@ -22,8 +22,6 @@
      "satooshi/php-coveralls": "dev-master"
   },
   "autoload": {
-    "psr-4": {
-      "point\\core\\": "src/"
-    }
+    "psr-4": {"point\\core\\": "src/"}
   }
 }
