@@ -29,6 +29,12 @@ class Framework
     private $_startTime = 0;
 
     /**
+     * framework configurations
+     * @var array
+     */
+    private $_config = array();
+
+    /**
      * Framework constructor
      *
      * @param mixed $initConfig Configuration of framework [optional]
@@ -37,7 +43,7 @@ class Framework
     {
         // extend config
         $config = array(
-            'pluginPath' => __DIR__ . '/../../..',
+            'pluginPath' => realpath(__DIR__ . '/../../..'),
             'displayError' => false,
             'displayErrorLevel' => E_ALL,
             'defaultTimeZone' => 'UTC'
@@ -66,8 +72,11 @@ class Framework
             ini_set('display_errors', '0');
         }
 
-        //Constant setup
-        define ('PLUGINS_PATH', $config['pluginPath']);
+        // fix pluginPath config
+        if (is_string($config['pluginPath'])) {
+            $config['pluginPath'] = array($config['pluginPath']);
+        }
+        $this->_config = &$config;
     }
 
     /**
@@ -98,17 +107,18 @@ class Framework
 
 
         //install plugin
-        if (!is_dir(PLUGINS_PATH)) {
-            throw new \Exception('Plugin path not found : ' . PLUGINS_PATH);
-        }
-        $pluginsDir = opendir(PLUGINS_PATH);
-        while (($pluginName = readdir($pluginsDir)) !== false) {
-            if (substr($pluginName, 0, 1) !== '.') {
-                $this->_runtime->install(PLUGINS_PATH . '/' . $pluginName);
-                $this->_context->log('Install plugin: ' . PLUGINS_PATH . '/' . $pluginName);
+        foreach ($this->_config['pluginPath'] as $pluginDir) {
+            if (!is_dir($pluginDir)) {
+                throw new \Exception('Plugin path not found : ' . $pluginDir);
             }
+            $pluginsDir = opendir($pluginDir);
+            while (($pluginName = readdir($pluginsDir)) !== false) {
+                if (substr($pluginName, 0, 1) !== '.') {
+                    $this->_runtime->install($pluginDir . '/' . $pluginName);
+                }
+            }
+            closedir($pluginsDir);
         }
-        closedir($pluginsDir);
 
         //auto start plugin
         $configs = $this->_runtime->getPluginsConfig();

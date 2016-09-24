@@ -80,7 +80,7 @@ class Runtime
      */
     public function install($pluginPath)
     {
-
+        $this->_context->log('Install plugin: ' . $pluginPath);
         $filename = $pluginPath . '/plugin.php';
         if (!is_file($filename)) {
             throw new \Exception(sprintf('Plugin configuration file not found. (%s)', $filename));
