@@ -21,7 +21,7 @@ class EventHandleManager
 
     public static function register()
     {
-        spl_autoload_register('point\core\EventHandleManager::loadClass', true, true);
+        spl_autoload_register('point\core\EventHandleManager::loadClass', true, false);
         set_exception_handler('point\core\EventHandleManager::fireExceptionHandler');
     }
 
