@@ -53,9 +53,9 @@ class Runtime
      * @param {string} $pluginId plugin id
      * @return array
      */
-    public function &getPluginConfig($pluginId)
+    public function getPluginConfig($pluginId)
     {
-        if (array_key_exists($pluginId, $this->_plugins)) {
+        if (is_string($pluginId) && array_key_exists($pluginId, $this->_plugins)) {
             return $this->_plugins[$pluginId];
         }
         return null;
@@ -66,7 +66,7 @@ class Runtime
      *
      * @return array
      */
-    public function &getPluginsConfig()
+    public function getPluginsConfig()
     {
         return $this->_plugins;
     }
@@ -89,12 +89,12 @@ class Runtime
             $point = array();
             $extension = array();
             // load plugin.php file
-            require_once $filename;
+            require $filename;
             unset($filename);
         }
 
         if (!array_key_exists('SymbolicName', $point)) {
-            throw new \Exception('Plugin SymbolicName not defined.');
+            throw new \Exception('Plugin Config SymbolicName Not Defined.');
         } else {
             $pluginId = $point['SymbolicName'];
             $this->_plugins[$pluginId]['Status'] = Runtime::UNINSTALLED;
@@ -194,6 +194,7 @@ class Runtime
     public function start($pluginId)
     {
         $this->_context->log('Start plugin: ' . $pluginId);
+        $this->setCurrentPluginId($pluginId);
 
         if (!array_key_exists($pluginId, $this->_plugins)) {
             throw new \Exception(sprintf('Plugin not found. id=%s', $pluginId));
@@ -218,9 +219,8 @@ class Runtime
 
             $this->_plugins[$pluginId]['Status'] = 'STARTING';
 
+            // invoke activator
             if (array_key_exists('Activator', $this->_plugins[$pluginId])) {
-                $this->setCurrentPluginId($pluginId);
-
                 $classFullName = str_replace('.', '\\', $pluginId) . '\\' . $this->_plugins[$pluginId]['Activator'];
 
                 $configurations = array(
@@ -237,12 +237,12 @@ class Runtime
                 if (!array_key_exists($pluginId, $this->_startPluginList)) {
                     $this->_startPluginList[$pluginId] = $pluginId;
                 }
-
-                $this->restoreCurrentPluginId();
             }
 
             // update status
             $this->_plugins[$pluginId]['Status'] = Runtime::ACTIVE;
+
+            $this->restoreCurrentPluginId();
 
         }
     }
@@ -282,21 +282,6 @@ class Runtime
     }
 
     /**
-     * To obtain the absolute URL path by plugin id
-     *
-     * @param string $filename filename
-     * @param string $pluginId plugin id
-     * @return string
-     */
-    public function getResourceUrl($filename, $pluginId = null)
-    {
-        if (is_null($pluginId)) {
-            $pluginId = $this->getCurrentPluginId();
-        }
-        return '/public/' . $pluginId . $filename;
-    }
-
-    /**
      * To obtain the absolute file system path by plugin id
      *
      * @param string $filename filename
@@ -307,6 +292,13 @@ class Runtime
     {
         if (is_null($pluginId)) {
             $pluginId = $this->getCurrentPluginId();
+        }
+        if (is_null($pluginId) || !isset($this->_plugins[$pluginId])) {
+            return null;
+        }
+        // fix path prefix
+        if (substr($filename, 0, 1) !== DIRECTORY_SEPARATOR) {
+            $filename = DIRECTORY_SEPARATOR . $filename;
         }
         return $this->_plugins[$pluginId]['Path'] . $filename;
     }
@@ -322,10 +314,10 @@ class Runtime
         if (!is_null($this->_currentPluginId)) {
             array_push($this->_currentPluginIdHistory, $this->_currentPluginId);
         }
-        $this->_context->log(
-            'Plugin stack(' . count($this->_currentPluginIdHistory) .'): ' . $pluginId
-        );
         $this->_currentPluginId = $pluginId;
+        $this->_context->log(
+            'Plugin stack add(' . count($this->_currentPluginIdHistory) .'), current = ' . $this->_currentPluginId
+        );
     }
 
     /**
@@ -346,5 +338,8 @@ class Runtime
     public function restoreCurrentPluginId()
     {
         $this->_currentPluginId = array_pop($this->_currentPluginIdHistory);
+        $this->_context->log(
+            'Plugin stack remove(' . count($this->_currentPluginIdHistory) .'), current = ' . $this->_currentPluginId
+        );
     }
 }

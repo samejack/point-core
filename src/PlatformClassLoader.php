@@ -24,7 +24,6 @@ class PlatformClassLoader
      */
     public function loadClass($fullClassName)
     {
-
         // make class real path (PEAR style)
         $currentPluginId = $this->_runtime->getCurrentPluginId();
         $pluginInfo = $this->_runtime->getPluginConfig($currentPluginId);
@@ -32,12 +31,14 @@ class PlatformClassLoader
         $className = array_pop($arr);
         $parentPluginId = implode('.', $arr);
 
-        if ($parentPluginId === $currentPluginId) {
+        if (is_null($pluginInfo)) {
+            return false;
+        } else  if ($parentPluginId === $currentPluginId) {
             // search in current plugin (nothing to do)
-        } elseif (array_key_exists('Depends', $pluginInfo) && in_array($parentPluginId, $pluginInfo['Depends'])) {
+        } else if (array_key_exists('Depends', $pluginInfo) && in_array($parentPluginId, $pluginInfo['Depends'])) {
             // search in depend plugins of current plugin
             $pluginInfo = $this->_runtime->getPluginConfig($parentPluginId);
-        } elseif ($parentPluginId !== '') {
+        } else if ($parentPluginId !== '' && $currentPluginId !== null) {
             throw new \Exception(
                 'Try to load a class in non-dependency plugin \'' .
                 $parentPluginId . '\'. (' . $fullClassName . ') current: ' . $currentPluginId
