@@ -184,7 +184,6 @@ class Runtime
         return true;
     }
 
-
     /**
      * Start plugin
      *
@@ -194,7 +193,6 @@ class Runtime
     public function start($pluginId)
     {
         $this->_context->log('Start plugin: ' . $pluginId);
-        $this->setCurrentPluginId($pluginId);
 
         if (!array_key_exists($pluginId, $this->_plugins)) {
             throw new \Exception(sprintf('Plugin not found. id=%s', $pluginId));
@@ -221,6 +219,8 @@ class Runtime
 
             // invoke activator
             if (array_key_exists('Activator', $this->_plugins[$pluginId])) {
+                $this->setCurrentPluginId($pluginId);
+
                 $classFullName = str_replace('.', '\\', $pluginId) . '\\' . $this->_plugins[$pluginId]['Activator'];
 
                 $configurations = array(
@@ -237,12 +237,12 @@ class Runtime
                 if (!array_key_exists($pluginId, $this->_startPluginList)) {
                     $this->_startPluginList[$pluginId] = $pluginId;
                 }
+
+                $this->restoreCurrentPluginId();
             }
 
             // update status
             $this->_plugins[$pluginId]['Status'] = Runtime::ACTIVE;
-
-            $this->restoreCurrentPluginId();
 
         }
     }
