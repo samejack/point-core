@@ -17,7 +17,7 @@ class EventHandleManager
     /**
      * @var array
      */
-    private static $_exceptionHanlders = array();
+    private static $_exceptionHandlers = array();
 
     public static function register()
     {
@@ -32,7 +32,6 @@ class EventHandleManager
      */
     public static function addClassLoader(&$classLoader)
     {
-        //TODO change handler to application context is better
         array_push(self::$_classLoaders, $classLoader);
     }
 
@@ -59,7 +58,7 @@ class EventHandleManager
      */
     public static function addExceptionHandler(&$handler)
     {
-        array_push(self::$_exceptionHanlders, $handler);
+        array_push(self::$_exceptionHandlers, $handler);
     }
 
     /**
@@ -70,8 +69,8 @@ class EventHandleManager
      */
     public static function fireExceptionHandler(\Exception &$exception)
     {
-        if (count(self::$_exceptionHanlders) > 0) {
-            foreach (self::$_exceptionHanlders as &$handler) {
+        if (count(self::$_exceptionHandlers) > 0) {
+            foreach (self::$_exceptionHandlers as &$handler) {
                 if (method_exists($handler, 'exceptionHandler')) {
                     if ($handler->exceptionHandler($exception)) {
                         break;
