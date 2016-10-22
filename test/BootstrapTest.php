@@ -27,11 +27,33 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(get_class($context), 'point\core\Context');
         $this->assertEquals(get_class($runtime), 'point\core\Runtime');
 
-
         $runtime->start('PluginA');
 
         $pluginAutoLoadTest = new \PluginA\AutoLoadTest();
         $this->assertEquals(get_class($pluginAutoLoadTest), 'PluginA\AutoLoadTest');
     }
 
+    public function testDebugRun()
+    {
+        $bootstrap = new Bootstrap(array(
+            'pluginPath' =>array( __DIR__ . '/TestPlugins'),
+            'displayError' => true,
+            'displayErrorLevel' => E_ALL,
+            'defaultTimeZone' => 'UTC',
+            'debug' => true
+        ));
+        $this->assertEquals(get_class($bootstrap), 'point\core\Bootstrap');
+
+        $framework = $bootstrap->getFramework();
+        $context = $framework->getContext();
+        $runtime = $framework->getRuntime();
+
+        $this->assertEquals(get_class($context), 'point\core\Context');
+        $this->assertEquals(get_class($runtime), 'point\core\Runtime');
+
+        $runtime->start('PluginA');
+
+        $pluginAutoLoadTest = new \PluginA\AutoLoadTest();
+        $this->assertEquals(get_class($pluginAutoLoadTest), 'PluginA\AutoLoadTest');
+    }
 }
