@@ -28,8 +28,6 @@ class RuntimeTest extends \PHPUnit_Framework_TestCase
 
     public function testAll()
     {
-
-
         $this->_runtime->stop('PluginC');
 
         $pluginConfig = $this->_runtime->getPluginConfig('PluginC');
@@ -37,8 +35,6 @@ class RuntimeTest extends \PHPUnit_Framework_TestCase
 
         $pluginConfigs = $this->_runtime->getPluginsConfig();
         $this->assertArrayHasKey('PluginC', $pluginConfigs);
-
-
 
         $this->_runtime->close();
     }
