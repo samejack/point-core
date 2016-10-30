@@ -59,10 +59,6 @@ class Framework
         //Set start timestamp
         $this->_startTime = microtime(true);
 
-        //register class loader manager
-        require_once dirname(__FILE__) . '/EventHandleManager.php';
-        EventHandleManager::register();
-
         //Set PHP error report
         if ($config['displayError'] === true) {
             error_reporting($config['displayErrorLevel']);
@@ -99,12 +95,16 @@ class Framework
             array(
                 'class' => '\point\core\PlatformClassLoader',
             ),
+            array(
+                'class' => '\point\core\EventHandleManager'
+            )
         );
         $this->_context->addConfiguration($beans);
 
         // register plugin and platform class loader
-        EventHandleManager::addClassLoader($this->_context->getBeanByClassName('point\core\PlatformClassLoader'));
-
+        $eventHandleManager = $this->_context->getBeanByClassName('\point\core\EventHandleManager');
+        $eventHandleManager->addClassLoader($this->_context->getBeanByClassName('point\core\PlatformClassLoader'));
+        $eventHandleManager->register();
 
         //install plugin
         foreach ($this->_config['pluginPath'] as $pluginDir) {

@@ -2,23 +2,26 @@
 
 namespace point\core\test;
 
-
 include_once __DIR__ . '/../Autoloader.php';
 
-class EventHandleManager extends \PHPUnit_Framework_TestCase
+class EventHandleManagerTest extends \PHPUnit_Framework_TestCase
 {
-    public function testAddExceptionHandler()
+
+    private $_eventHandleManager;
+
+    public function __construct($name = NULL, array $data = array(), $dataName = '')
     {
         require_once __DIR__ . '/TestClass/ExceptionHandler.php';
-        $handler = new ExceptionHandler();
+        $this->_eventHandleManager = new \point\core\EventHandleManager();
+    }
 
-        \point\core\EventHandleManager::register();
-        \point\core\EventHandleManager::addExceptionHandler($handler);
+    public function testAddExceptionHandler()
+    {
+        $this->_eventHandleManager->addExceptionHandler($handler);
     }
 
     public function testRegister()
     {
-        require_once __DIR__ . '/TestClass/ExceptionHandler.php';
-        \point\core\EventHandleManager::register();
+        $this->_eventHandleManager->register();
     }
 }

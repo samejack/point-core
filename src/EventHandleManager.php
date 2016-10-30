@@ -12,17 +12,17 @@ class EventHandleManager
     /**
      * @var array
      */
-    private static $_classLoaders = array();
+    private $_classLoaders = array();
 
     /**
      * @var array
      */
-    private static $_exceptionHandlers = array();
+    private $_exceptionHandlers = array();
 
-    public static function register()
+    public function register()
     {
-        spl_autoload_register('point\core\EventHandleManager::loadClass', true, false);
-        set_exception_handler('point\core\EventHandleManager::fireExceptionHandler');
+        spl_autoload_register(array($this, 'loadClass'), true, false);
+        //TODO void handler ( Throwable $ex ) for PHP 7
     }
 
     /**
@@ -30,9 +30,9 @@ class EventHandleManager
      *
      * @param object $classLoader
      */
-    public static function addClassLoader(&$classLoader)
+    public function addClassLoader(&$classLoader)
     {
-        array_push(self::$_classLoaders, $classLoader);
+        array_push($this->_classLoaders, $classLoader);
     }
 
     /**
@@ -41,9 +41,9 @@ class EventHandleManager
      * @param String $className
      * @return boolean
      */
-    public static function loadClass($className)
+    public function loadClass($className)
     {
-        foreach (self::$_classLoaders as &$classLoader) {
+        foreach ($this->_classLoaders as &$classLoader) {
             if ($classLoader->loadClass($className)) {
                 return true;
             }
@@ -56,28 +56,9 @@ class EventHandleManager
      *
      * @param object $handler
      */
-    public static function addExceptionHandler(&$handler)
+    public function addExceptionHandler(&$handler)
     {
-        array_push(self::$_exceptionHandlers, $handler);
+        array_push($this->_exceptionHandlers, $handler);
     }
 
-    /**
-     * Exception handler
-     *
-     * @param \Exception $exception
-     * @return boolean
-     */
-    public static function fireExceptionHandler(\Exception &$exception)
-    {
-        if (count(self::$_exceptionHandlers) > 0) {
-            foreach (self::$_exceptionHandlers as &$handler) {
-                if (method_exists($handler, 'exceptionHandler') && $handler->exceptionHandler($exception)) {
-                    break;
-                }
-            }
-        } else {
-            echo $exception;
-        }
-        return false;
-    }
 }
