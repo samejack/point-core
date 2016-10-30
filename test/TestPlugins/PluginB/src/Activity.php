@@ -1,12 +1,11 @@
 <?php
 
-namespace PluginD\Parent;
+namespace PluginB;
 
 class Activity {
 
     public function start()
     {
-
+        new \PluginC\PluginCClass();
     }
-
 } 

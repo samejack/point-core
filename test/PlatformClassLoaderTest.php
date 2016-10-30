@@ -24,4 +24,25 @@ class PlatformClassLoaderTest extends \PHPUnit_Framework_TestCase
         $runtime->start('PluginC');
     }
 
+    public function testLoadUnDependsPluginClass()
+    {
+        $bootstrap = new Bootstrap(array(
+            'pluginPath' => __DIR__ . '/TestPlugins',
+            'displayError' => false,
+            'displayErrorLevel' => E_ALL,
+            'defaultTimeZone' => 'UTC',
+            'debug' => false
+        ));
+
+        $framework = $bootstrap->getFramework();
+        $runtime = $framework->getRuntime();
+
+        try {
+            $runtime->start('PluginB');
+        } catch (\Exception $exception) {
+            $str = 'Try to load a class in non-dependency plugin \'PluginC\'. (PluginC\PluginCClass) current: PluginB';
+            $this->assertContains($str, $exception->getMessage());
+        }
+    }
+
 }
