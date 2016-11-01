@@ -23,30 +23,4 @@ class FrameworkTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($framework->getExecuteTime() > 0);
     }
 
-    public function testDepends()
-    {
-
-//        $bootstrap = new Bootstrap(array(
-//            'pluginPath' => array( __DIR__ . '/TestPlugins'),
-//            'displayError' => true,
-//            'displayErrorLevel' => E_ALL,
-//            'defaultTimeZone' => 'UTC',
-//            'debug' => true
-//        ));
-//
-//        $bootstrap = new Bootstrap(array(
-//            'pluginPath' => array( __DIR__ . '/TestPlugins'),
-//            'displayError' => true,
-//            'displayErrorLevel' => E_ALL,
-//            'defaultTimeZone' => 'UTC',
-//            'debug' => true
-//        ));
-
-//        $framework = $bootstrap->getFramework();
-//        $runtime = $framework->getRuntime();
-
-//        $runtime->start('PluginE.Child');
-
-    }
-
 }

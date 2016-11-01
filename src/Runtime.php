@@ -44,7 +44,7 @@ class Runtime
         if (isset($this->_extensions[$name . '@' . $pluginId])) {
             return $this->_extensions[$name . '@' . $pluginId];
         }
-        return array();
+        return null;
     }
 
     /**
@@ -339,7 +339,27 @@ class Runtime
     {
         $this->_currentPluginId = array_pop($this->_currentPluginIdHistory);
         $this->_context->log(
-            'Plugin stack remove(' . count($this->_currentPluginIdHistory) .'), current = ' . $this->_currentPluginId
+            'Plugin stack remove(' . count($this->_currentPluginIdHistory) . '), current = ' . $this->_currentPluginId
         );
+    }
+
+    /**
+     * @param $object          Object instance
+     * @param $pluginId        Run plugin id
+     * @param $functionName    Invoke function name
+     * @param array $arguments Invoke arguments
+     * @return mixed
+     */
+    public function invokeFunctionByPlugin($object, $pluginId, $functionName, array $arguments = null)
+    {
+        $reflectionMethod = new \ReflectionMethod(get_class($object), $functionName);
+        $this->setCurrentPluginId($pluginId);
+        if (is_array($arguments)) {
+            $result = $reflectionMethod->invokeArgs($object, $arguments);
+        } else {
+            $result = $reflectionMethod->invoke($object);
+        }
+        $this->restoreCurrentPluginId();
+        return $result;
     }
 }

@@ -8,4 +8,9 @@ class Activity {
     {
         new \PluginC\PluginCClass();
     }
+
+    public function loadUnExistPluginClass()
+    {
+        echo __FUNCTION__;
+    }
 } 

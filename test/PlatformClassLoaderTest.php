@@ -37,11 +37,20 @@ class PlatformClassLoaderTest extends \PHPUnit_Framework_TestCase
         $framework = $bootstrap->getFramework();
         $runtime = $framework->getRuntime();
 
+        $catchException = null;
         try {
             $runtime->start('PluginB');
         } catch (\Exception $exception) {
-            $str = 'Try to load a class in non-dependency plugin \'PluginC\'. (PluginC\PluginCClass) current: PluginB';
-            $this->assertContains($str, $exception->getMessage());
+            $catchException = $exception;
+        }
+        $str = 'Try to load a class in non-dependency plugin \'PluginC\'. (PluginC\PluginCClass) current: PluginB';
+        $this->assertContains($str, $catchException->getMessage());
+
+        $activity = $framework->getContext()->getBeanByClassName('\PluginB\Activity');
+        try {
+            $runtime->invokeFunctionByPlugin($activity, 'PluginB', 'loadUnExistPluginClass');
+        } catch (\Exception $exception) {
+            //TODO
         }
     }
 

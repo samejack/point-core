@@ -72,5 +72,11 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArrayHasKey('PluginE.Child', $extension);
         $this->assertArrayHasKey('Title', $extension['PluginE.Child'][0]);
+
+        $extension = $runtime->getExtension('NotFound', 'PluginD.Parent');
+        $this->assertNull($extension);
+
+        $extension = $runtime->getExtension('Menu');
+        $this->assertNull($extension);
     }
 }
