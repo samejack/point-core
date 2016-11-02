@@ -6,7 +6,6 @@ class Activity {
 
     public function start()
     {
-
     }
 
 } 

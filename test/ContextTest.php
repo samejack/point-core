@@ -15,10 +15,21 @@ class ContextTest extends \PHPUnit_Framework_TestCase
      */
     private $_foo;
 
+    public function testResetInstance()
+    {
+        Context::resetInstance();
+    }
+
     public function testGetInstance()
     {
         $context = Context::getInstance();
         $this->assertEquals(get_class($context), 'point\core\Context');
+    }
+
+    public function testSetDebug()
+    {
+        $context = Context::getInstance();
+        $context->setDebug(false);
     }
 
     public function testGetBeanByClassName()
@@ -114,5 +125,31 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         $this->_foo = $context->getBeanByClassName('\point\core\test\Foo');
 
         $this->assertEquals(get_class($this->_foo->getInjectInterface()), 'point\core\test\MyInterfaceImp');
+    }
+
+    public function testBeanIdDuplicate()
+    {
+        $context = new Context();
+
+        $catchException = null;
+        try {
+            $context->addConfiguration(array(
+                array(
+                    Bean::CLASS_NAME => '\point\core\test\Foo',
+                    Bean::INCLUDE_PATH => __DIR__ . '/TestClass/Foo.php',
+                    Bean::ID => 'super.id.1'
+                ),
+                array(
+                    Bean::CLASS_NAME => '\point\core\test\Bar',
+                    Bean::INCLUDE_PATH => __DIR__ . '/TestClass/Bar.php',
+                    Bean::ID => 'super.id.1'
+                )
+            ));
+        } catch (\Exception $exception) {
+            $catchException = $exception;
+        }
+        $str = 'Bean id is already existed: super.id.1';
+        $this->assertContains($str, $catchException->getMessage());
+
     }
 }

@@ -11,6 +11,6 @@ class Activity {
 
     public function loadUnExistPluginClass()
     {
-        echo __FUNCTION__;
     }
+
 } 

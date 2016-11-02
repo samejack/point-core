@@ -79,4 +79,19 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
         $extension = $runtime->getExtension('Menu');
         $this->assertNull($extension);
     }
+
+    public function testInstallPluginFail()
+    {
+        $catchException = null;
+        try {
+            new Bootstrap(array(
+                'pluginPath' => __DIR__ . '/TestErrorPlugins1'
+            ));
+        } catch (\Exception $exception) {
+            $catchException = $exception;
+        }
+        $str = 'Plugin Config SymbolicName Not Defined.';
+        $this->assertContains($str, $catchException->getMessage());
+    }
+
 }

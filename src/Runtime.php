@@ -82,16 +82,13 @@ class Runtime
     {
         $this->_context->log('Install plugin: ' . $pluginPath);
         $filename = $pluginPath . '/plugin.php';
-        if (!is_file($filename)) {
-            throw new \Exception(sprintf('Plugin configuration file not found. (%s)', $filename));
-        } else {
-            // initial var
-            $point = array();
-            $extension = array();
-            // load plugin.php file
-            require $filename;
-            unset($filename);
-        }
+
+        // initial var
+        $point = array();
+        $extension = array();
+        // load plugin.php file
+        require $filename;
+        unset($filename);
 
         if (!array_key_exists('SymbolicName', $point)) {
             throw new \Exception('Plugin Config SymbolicName Not Defined.');
@@ -252,9 +249,14 @@ class Runtime
      * Stop plugin
      *
      * @param string $pluginId plugin id
+     * @throws \Exception
      */
     public function stop($pluginId)
     {
+        if (!array_key_exists($pluginId, $this->_plugins)) {
+            throw new \Exception(sprintf('Plugin not found. id=%s', $pluginId));
+        }
+
         if ($this->_plugins[$pluginId]['Status'] === 'ACTIVE') {
             $this->_plugins[$pluginId]['Status'] = Runtime::STOPPING;
 
@@ -274,6 +276,11 @@ class Runtime
         }
     }
 
+    /**
+     * Close runtime and stop all plugins
+     *
+     * @throws \Exception
+     */
     public function close()
     {
         foreach (array_keys($this->_startPluginList) as $pluginId) {

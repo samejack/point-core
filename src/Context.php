@@ -52,6 +52,14 @@ class Context
     }
 
     /**
+     * Reset context singleton instance
+     */
+    public static function resetInstance()
+    {
+        Context::$_self = null;
+    }
+
+    /**
      * Construct
      *
      * @param array $initConfig init application context configuration
@@ -233,7 +241,7 @@ class Context
                     if (!array_key_exists($matches[1], $this->_beanMapById)) {
                         //TODO: How to create BeanFactory instance
 
-                        $this->log('GG!!');
+                        $this->log('//TODO: !!');
                     } else {
                         $this->_beanMapById[$matches[1]]->inject($bean, $property);
                     }

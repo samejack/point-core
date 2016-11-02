@@ -114,7 +114,10 @@ class Framework
             $pluginsDir = opendir($pluginDir);
             while (($pluginName = readdir($pluginsDir)) !== false) {
                 if (substr($pluginName, 0, 1) !== '.') {
-                    $this->_runtime->install($pluginDir . '/' . $pluginName);
+                    $filename = $pluginDir . '/' . $pluginName . '/plugin.php';
+                    if (is_file($filename)) {
+                        $this->_runtime->install($pluginDir . '/' . $pluginName);
+                    }
                 }
             }
             closedir($pluginsDir);

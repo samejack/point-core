@@ -26,7 +26,7 @@ class RuntimeTest extends \PHPUnit_Framework_TestCase
         parent::__construct($name, $data, $dataName);
     }
 
-    public function testAll()
+    public function testGetPluginsConfig()
     {
         $this->_runtime->stop('PluginC');
 
@@ -35,8 +35,6 @@ class RuntimeTest extends \PHPUnit_Framework_TestCase
 
         $pluginConfigs = $this->_runtime->getPluginsConfig();
         $this->assertArrayHasKey('PluginC', $pluginConfigs);
-
-        $this->_runtime->close();
     }
 
     public function testGetResourcePath()
@@ -48,4 +46,39 @@ class RuntimeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($resourcePath, __DIR__ . '/TestPlugins/PluginC/file.mimetype');
     }
 
+
+    public function testStartPluginException()
+    {
+        $catchException = null;
+        try {
+            $this->_runtime->start('not.exist.plugin');
+        } catch (\Exception $exception) {
+            $catchException = $exception;
+        }
+        $str = 'Plugin not found. id=not.exist.plugin';
+        $this->assertContains($str, $catchException->getMessage());
+    }
+
+    public function testStopPlugin()
+    {
+        $catchException = null;
+        $this->_runtime->stop('PluginE.Child');
+    }
+
+    public function testStopPluginException()
+    {
+        $catchException = null;
+        try {
+            $this->_runtime->stop('not.exist.plugin');
+        } catch (\Exception $exception) {
+            $catchException = $exception;
+        }
+        $str = 'Plugin not found. id=not.exist.plugin';
+        $this->assertContains($str, $catchException->getMessage());
+    }
+
+    public function testClose()
+    {
+        $this->_runtime->close();
+    }
 }
