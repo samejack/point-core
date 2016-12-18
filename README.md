@@ -15,22 +15,30 @@ This is a PHP IoC/DI Module Container.It can inject instance of object through t
 | Annotation          | Description                |
 | :-------------      | :-------------             |
 | @Autowired          | Auto inject                |
-| @var                | Mapping by Class or Interface |
+| @var                | Mapping by class or interface name |
 | @Qualifier          | Inject by identify         |
 
 ## Bean Configuration
 | Configuration       | Description                |
 | :-------------      | :-------------             |
-| Bean::INIT-METHOD         | Initialize invoke function |
+| Bean::INIT-METHOD         | Initialize invoke function             |
 | Bean::SCOPE               | Instance mode (prototype or singleton) |
-| Bean::CONSTRUCTOR_ARG     | Constructor argunet        |
-| Bean::PROPERTY            | Set default property       |
-| Bean::AUTO_LOAD           | Auto load class            |
-| Bean::INCLUDE_PATH        | Auto include file path     |
+| Bean::CONSTRUCTOR_ARG     | Constructor arguments                  |
+| Bean::PROPERTY            | Set default property                   |
+| Bean::AUTO_LOAD           | Auto load class when be dependent on   |
+| Bean::INCLUDE_PATH        | Auto include file path (use context autoload before SPL) |
+| Bean::ID                  | Inject object by ID via @Qualifier     |
 
-
-PHP Example:
+## PHP Example:
+### General Inject Snippet
 ```php
+<?php
+
+include_once(__DIR__ . '/../Autoloader.php');
+
+use point\core\Context;
+use point\core\Bean;
+
 class Foo
 {
   /**
@@ -61,7 +69,7 @@ $context->addConfiguration(array(
 ));
 
 $foo = $context->getBeanByClassName('Foo');
-echo get_object($foo->getBar());  // print Bar
+echo get_class($foo->getBar());  // print Bar
 ```
 
 ## License
