@@ -29,8 +29,8 @@ This is a PHP IoC/DI Module Container.It can inject instance of object through t
 | Bean::INCLUDE_PATH        | Auto include file path (use context autoload before SPL) |
 | Bean::ID                  | Inject object by ID via @Qualifier     |
 
-## PHP Example:
-### General Inject Snippet
+## PHP Example (Snippet Code):
+### General Inject
 ```php
 <?php
 
@@ -69,7 +69,57 @@ $context->addConfiguration(array(
 ));
 
 $foo = $context->getBeanByClassName('Foo');
-echo get_class($foo->getBar());  // print Bar
+var_dump($foo->getBar());  // print Class Bar
+```
+
+### Inject After
+```php
+<?php
+
+include_once(__DIR__ . '/../Autoloader.php');
+
+use point\core\Context;
+use point\core\Bean;
+
+class Foo
+{
+  /**
+   * @Autowired
+   * @var Bar
+   */
+  private $_bar;
+
+  public function getBar()
+  {
+      return $this->_bar;
+  }
+}
+
+$context = new Context();
+
+$context->addConfiguration(array(
+  array(
+    Bean::CLASS_NAME => 'Foo'
+  )
+));
+
+$foo = $context->getBeanByClassName('Foo');
+
+var_dump($foo->getBar());  // print NULL on unload Bar Class
+
+// load Bar class
+class Bar
+{
+}
+
+// set configuration
+$context->addConfiguration(array(
+    array(
+        Bean::CLASS_NAME => 'Bar'
+    )
+));
+
+var_dump($foo->getBar());  // print Class Bar
 ```
 
 ## License
