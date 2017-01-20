@@ -238,12 +238,13 @@ class Context
 
                     $this->_beanMapByClassName[$className]->inject($bean, $property);
                 } else if (preg_match('/@Qualifier\([\'"]?([^\'"]+)[\'"]?\)/', $doc, $matches) > 0) {
-                    if (!array_key_exists($matches[1], $this->_beanMapById)) {
+                    $beanId = $matches[1];
+                    if (!array_key_exists($beanId, $this->_beanMapById)) {
                         //TODO: How to create BeanFactory instance
 
                         $this->log('//TODO: !!');
                     } else {
-                        $this->_beanMapById[$matches[1]]->inject($bean, $property);
+                        $this->_beanMapById[$beanId]->inject($bean, $property);
                     }
                 }
             }

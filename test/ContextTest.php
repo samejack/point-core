@@ -152,4 +152,30 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         $this->assertContains($str, $catchException->getMessage());
 
     }
+
+    public function testQualifierInject()
+    {
+        $context = new Context();
+
+        $context->addConfiguration(array(
+            array(
+                Bean::CLASS_NAME => '\point\core\test\Qualifier',
+                Bean::INCLUDE_PATH => __DIR__ . '/TestClass/Qualifier.php'
+            ),
+            array(
+                Bean::CLASS_NAME => '\point\core\test\ImpA',
+                Bean::ID => 'my.imp.A',
+                Bean::INCLUDE_PATH => __DIR__ . '/TestClass/ImpA.php'
+            ),
+            array(
+                Bean::CLASS_NAME => '\point\core\test\ImpB',
+                Bean::ID => 'my.imp.B',
+                Bean::INCLUDE_PATH => __DIR__ . '/TestClass/ImpB.php'
+            )
+        ));
+
+        $qualifier = $context->getBeanByClassName('\point\core\test\Qualifier');
+
+        $this->assertInstanceOf('\point\core\test\ImpB', $qualifier->imp);
+    }
 }
