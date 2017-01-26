@@ -47,11 +47,10 @@ class PlatformClassLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertContains($str, $catchException->getMessage());
 
         $activity = $framework->getContext()->getBeanByClassName('\PluginB\Activity');
-        try {
-            $runtime->invokeFunctionByPlugin($activity, 'PluginB', 'loadUnExistPluginClass');
-        } catch (\Exception $exception) {
-            //TODO
-        }
+
+        $runtime->setCurrentPluginId('PluginB');
+        $activity->loadUnExistPluginClass();
+        $runtime->restoreCurrentPluginId();
     }
 
 }

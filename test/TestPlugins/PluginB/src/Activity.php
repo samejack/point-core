@@ -11,6 +11,7 @@ class Activity {
 
     public function loadUnExistPluginClass()
     {
+        //new \PHPUnit_Framework_Exception('!!');
     }
 
 } 

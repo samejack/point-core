@@ -12,10 +12,3 @@ $extension['PluginD.Parent']['Menu'] = array(
         'Title' => 'PluginD Menu'
     )
 );
-
-//$point['Beans'] = array(
-//    array(
-//        Bean::CLASS_NAME => '\PluginD.Parent\PluginDClass',
-//        Bean::INIT_METHOD => array('start'),
-//    ),
-//);

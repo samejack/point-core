@@ -34,7 +34,6 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 
     public function testGetBeanByClassName()
     {
-
         $context = new Context();
 
         $context->addConfiguration(array(
@@ -54,6 +53,25 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(is_string($hash2));
         $this->assertEquals($hash1, $hash2);
 
+    }
+
+    public function testGetReflectionClass()
+    {
+        $context = new Context();
+
+        $context->addConfiguration(array(
+            array(
+                Bean::CLASS_NAME => '\point\core\test\Foo',
+                Bean::INCLUDE_PATH => __DIR__ . '/TestClass/Foo.php'
+            )
+        ));
+
+        $reflectionClass = $context->getReflectionClass('\point\core\test\Foo');
+        $this->assertNull($reflectionClass);
+
+        $context->getBeanByClassName('\point\core\test\Foo');
+        $reflectionClass = $context->getReflectionClass('\point\core\test\Foo');
+        $this->assertInstanceOf('\ReflectionClass', $reflectionClass);
     }
 
     public function testInject()
@@ -178,4 +196,5 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('\point\core\test\ImpB', $qualifier->imp);
     }
+
 }
