@@ -75,7 +75,7 @@ class Runtime
      * Install plugin and register extension
      *
      * @param string $pluginPath plugin id
-     * @return bool success or fail
+     * @return string|bool Success return plugin ID or fail return false
      * @throws \Exception
      */
     public function install($pluginPath)
@@ -126,8 +126,6 @@ class Runtime
                             foreach ($extension[$extPlugin][$extensionName] as $key => $value) {
                                 $this->_extensions[$extensionName . '@' . $extPlugin][$pluginId][$key] = $value;
                             }
-                        } elseif (!isset($this->_extensions)) {
-                            throw new \Exception('Can not registe Plugin Extension Point : Plugin "' . $extPlugin . '" not found!');
                         } else {
                             array_push(
                                 $this->_extensions[$extensionName . '@' . $extPlugin],
@@ -142,7 +140,7 @@ class Runtime
         // update status
         $this->_plugins[$pluginId]['Status'] = Runtime::INSTALLED;
 
-        return true;
+        return $pluginId;
     }
 
     /**
@@ -161,13 +159,7 @@ class Runtime
             throw new \Exception(sprintf('Plugin can\'t resolved. Plugin id not found. (id=%s)', $pluginId));
         }
 
-        // TODO: plugin fragment
-        if (array_key_exists('Type', $this->_plugins[$pluginId])
-            && strtoupper($this->_plugins[$pluginId]['Type']) === 'FRAGMENT'
-        ) {
-            //TODO implement
-            return true;
-        }
+        // TODO: implement plugin fragment  -> $this->_plugins[$pluginId]['Type'] = 'FRAGMENT'
 
         // load beans
         if (array_key_exists('Beans', $this->_plugins[$pluginId])) {
@@ -202,7 +194,7 @@ class Runtime
 
         // start plugin
         if ($this->_plugins[$pluginId]['Status'] === Runtime::RESOLVED) {
-            //start plugin's depends
+            //start plugin depends
             if (array_key_exists('Depends', $this->_plugins[$pluginId])
                 && is_array($this->_plugins[$pluginId]['Depends'])) {
                 foreach ($this->_plugins[$pluginId]['Depends'] as $subPluginId) {
@@ -232,7 +224,7 @@ class Runtime
 
                 //record start plugin name
                 if (!array_key_exists($pluginId, $this->_startPluginList)) {
-                    $this->_startPluginList[$pluginId] = $pluginId;
+                    $this->_startPluginList[$pluginId] = true;
                 }
 
                 $this->restoreCurrentPluginId();
@@ -350,23 +342,4 @@ class Runtime
         );
     }
 
-    /**
-     * @param $object          Object instance
-     * @param $pluginId        Run plugin id
-     * @param $functionName    Invoke function name
-     * @param array $arguments Invoke arguments
-     * @return mixed
-     */
-    public function invokeFunctionByPlugin($object, $pluginId, $functionName, array $arguments = null)
-    {
-        $reflectionMethod = new \ReflectionMethod(get_class($object), $functionName);
-        $this->setCurrentPluginId($pluginId);
-        if (is_array($arguments)) {
-            $result = $reflectionMethod->invokeArgs($object, $arguments);
-        } else {
-            $result = $reflectionMethod->invoke($object);
-        }
-        $this->restoreCurrentPluginId();
-        return $result;
-    }
 }
