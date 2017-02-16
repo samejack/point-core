@@ -11,6 +11,12 @@ This is a PHP IoC/DI Module Container.It can inject instance of object through t
 * Configuration by PHP Annotation
 * Rich Module Framework
 
+## Getting and Start (composer)
+
+```shell
+composer require samejack/point-core
+```
+
 ## Annotaion Specification
 | Annotation          | Description                |
 | :-------------      | :-------------             |
