@@ -13,8 +13,38 @@ This is a PHP IoC/DI Module Container.It can inject instance of object through t
 
 ## Getting and Start (composer)
 
+### Install point-core from composer repository
 ```shell
 composer require samejack/point-core
+```
+
+### Get first object from context
+```php
+<?php
+
+include 'vendor/autoload.php';
+
+use point\core\Context;
+use point\core\Bean;
+
+class Bar
+{
+  public function __toString()
+  {
+    return 'Bar!';
+  }
+}
+
+$context = new Context();
+
+$context->addConfiguration(array(
+  array(
+    Bean::CLASS_NAME => 'Bar'
+  )
+));
+
+$bar = $context->getBeanByClassName('Bar');
+echo $bar;  // print Bar!
 ```
 
 ## Annotaion Specification
@@ -40,8 +70,6 @@ composer require samejack/point-core
 ### General Inject
 ```php
 <?php
-
-include_once(__DIR__ . '/../Autoloader.php');
 
 use point\core\Context;
 use point\core\Bean;
@@ -82,8 +110,6 @@ var_dump($foo->getBar());  // print Class Bar
 ### Inject After
 ```php
 <?php
-
-include_once(__DIR__ . '/../Autoloader.php');
 
 use point\core\Context;
 use point\core\Bean;
@@ -131,8 +157,6 @@ var_dump($foo->getBar());  // print Class Bar
 
 ### Inject by id of bean
 ```php
-
-include_once(__DIR__ . '/../Autoloader.php');
 
 use point\core\Context;
 use point\core\Bean;
