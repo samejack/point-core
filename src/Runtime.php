@@ -299,7 +299,7 @@ class Runtime
         if (substr($filename, 0, 1) !== DIRECTORY_SEPARATOR) {
             $filename = DIRECTORY_SEPARATOR . $filename;
         }
-        return $this->_plugins[$pluginId]['Path'] . $filename;
+        return realpath($this->_plugins[$pluginId]['Path'] . $filename);
     }
 
     /**
