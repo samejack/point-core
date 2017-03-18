@@ -72,6 +72,9 @@ class Framework
         if (is_string($config['pluginPath'])) {
             $config['pluginPath'] = array($config['pluginPath']);
         }
+        
+        // auto add vendor dir of composer to be plugin path
+        $config['pluginPath'][] = __DIR__ . '/../../';
         $this->_config = &$config;
     }
 
