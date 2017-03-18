@@ -285,7 +285,7 @@ class Runtime
      *
      * @param string $filename filename
      * @param string $pluginId plugin id [optional]
-     * @return string
+     * @return string File absolute path
      */
     public function getResourcePath($filename, $pluginId = null)
     {
@@ -299,7 +299,23 @@ class Runtime
         if (substr($filename, 0, 1) !== DIRECTORY_SEPARATOR) {
             $filename = DIRECTORY_SEPARATOR . $filename;
         }
-        return realpath($this->_plugins[$pluginId]['Path'] . $filename);
+        // parse path
+        $array = explode(DIRECTORY_SEPARATOR, $this->_plugins[$pluginId]['Path'] . $filename);
+        $parents = array();
+        foreach ($array as &$dir) {
+            switch( $dir) {
+                case '.':
+                    // not thing to do
+                    break;
+                case '..':
+                    array_pop( $parents);
+                    break;
+                default:
+                    $parents[] = $dir;
+                    break;
+            }
+        }
+        return implode( '/', $parents);
     }
 
     /**
