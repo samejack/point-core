@@ -219,6 +219,7 @@ class MyControllerA
         return $this->_pdo;
     }
 }
+
 class MyControllerB
 {
     /**
@@ -231,6 +232,7 @@ class MyControllerB
         return $this->_pdo;
     }
 }
+
 $context = new Context();
 $context->addConfiguration(array(
     array(
@@ -244,6 +246,7 @@ $context->addConfiguration(array(
         Bean::CONSTRUCTOR_ARG => ['mysql:host=localhost;dbname=mysql', 'root', 'password!']
     )
 ));
+
 $ctrlA = $context->getBeanByClassName('MyControllerA');
 var_dump($ctrlA->getPdo());  // print: class PDO#11 (0)...
 $ctrlB = $context->getBeanByClassName('MyControllerB');
