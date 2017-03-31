@@ -1,4 +1,5 @@
 # point-core
+[![Latest Stable Version](https://poser.pugx.org/samejack/point-core/v/stable)](https://packagist.org/packages/samejack/point-core)
 [![Build Status](https://travis-ci.org/samejack/point-core.svg?branch=master)](https://travis-ci.org/samejack/point-core)
 [![Coverage Status](https://coveralls.io/repos/samejack/point-core/badge.svg?branch=master)](https://coveralls.io/r/samejack/point-core?branch=master) 
 
