@@ -29,7 +29,17 @@ class Bootstrap
             )
         );
         $this->_framework = $context->getBeanByClassName('point\core\Framework');
-        $this->_framework->launcher();
+    }
+
+    /**
+     * Launch Framework
+     *
+     * @return Framework
+     */
+    public function launch()
+    {
+        $this->getFramework()->launcher();
+        return $this->getFramework();
     }
 
     /**
