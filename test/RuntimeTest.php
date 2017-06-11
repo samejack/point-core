@@ -24,6 +24,7 @@ class RuntimeTest extends \PHPUnit_Framework_TestCase
             'defaultTimeZone' => 'UTC',
             'debug' => false
         ));
+        $this->_bootstrap->launch();
         $this->_runtime = $this->_bootstrap->getFramework()->getRuntime();
         parent::__construct($name, $data, $dataName);
     }

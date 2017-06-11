@@ -20,6 +20,7 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
             'defaultTimeZone' => 'UTC',
             'debug' => false
         ));
+        $this->_bootstrap->launch();
     }
 
     public function testRun()
@@ -48,6 +49,7 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
             'defaultTimeZone' => 'UTC',
             'debug' => true
         ));
+        $bootstrap->launch();
         $this->assertEquals(get_class($bootstrap), 'point\core\Bootstrap');
 
         $framework = $bootstrap->getFramework();
@@ -84,9 +86,10 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
     {
         $catchException = null;
         try {
-            new Bootstrap(array(
+            $bootstrap = new Bootstrap(array(
                 'pluginPath' => __DIR__ . '/TestErrorPlugins1'
             ));
+            $bootstrap->launch();
         } catch (\Exception $exception) {
             $catchException = $exception;
         }
