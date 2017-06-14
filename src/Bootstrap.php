@@ -16,9 +16,6 @@ class Bootstrap
 
     public function __construct($config = null)
     {
-        include_once dirname(__FILE__) . '/Context.php';
-        include_once dirname(__FILE__) . '/Framework.php';
-
         $context = new Context($config);
         $context->addConfiguration(
             array(
@@ -29,21 +26,12 @@ class Bootstrap
             )
         );
         $this->_framework = $context->getBeanByClassName('point\core\Framework');
+
+        $this->getFramework()->prepare()->launch()->destroy();
     }
 
     /**
-     * Launch Framework
-     *
-     * @return Framework
-     */
-    public function launch()
-    {
-        $this->getFramework()->launcher();
-        return $this->getFramework();
-    }
-
-    /**
-     * @return object|Framework
+     * @return \point\core\Framework
      */
     public function getFramework()
     {

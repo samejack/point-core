@@ -22,7 +22,7 @@ class EventHandleManager
     public function register()
     {
         spl_autoload_register(array($this, 'loadClass'), true, false);
-        //TODO void handler ( Throwable $ex ) for PHP 7
+        set_exception_handler(array($this, 'exceptionHandler'));
     }
 
     /**
@@ -49,6 +49,21 @@ class EventHandleManager
             }
         }
         return false;
+    }
+
+    /**
+     * Master exception handler
+     *
+     * @param \Exception $exception
+     * @return boolean
+     */
+    public function exceptionHandler($exception)
+    {
+        foreach ($this->_exceptionHandlers as &$exceptionHandler) {
+            if ($exceptionHandler->exceptionHandler($exception) === true) {
+                break;
+            }
+        }
     }
 
     /**

@@ -79,14 +79,14 @@ class Framework
     }
 
     /**
-     * Point Framework Launcher<br>
-     * Install adn start plugins
+     * Prepare before launch
+     * Install and resolve all plugins
      *
-     * @throw \Exception
+     * @return Framework
+     * @throws \Exception
      */
-    public function launcher()
+    public function prepare()
     {
-
         //load family class
         require_once __DIR__ . '/Runtime.php';
         require_once __DIR__ . '/PlatformClassLoader.php';
@@ -126,6 +126,17 @@ class Framework
             closedir($pluginsDir);
         }
 
+        return $this;
+    }
+
+    /**
+     * Point Framework Launcher
+     * Start plugins
+     *
+     * @return Framework
+     */
+    public function launch()
+    {
         //auto start plugin
         $configs = $this->_runtime->getPluginsConfig();
         foreach ($configs as $pluginId => &$config) {
@@ -134,8 +145,18 @@ class Framework
             }
         }
 
-        $this->_runtime->close();
+        return $this;
     }
+
+    /**
+     * @return Framework
+     */
+    public function destroy()
+    {
+        $this->_runtime->close();
+        return $this;
+    }
+
 
     public function getStartTime()
     {
@@ -143,7 +164,7 @@ class Framework
     }
 
     /**
-     * Get the time from framework invoke launcher
+     * Get the time from framework invoke launch
      *
      * @return Integer
      */

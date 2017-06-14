@@ -18,7 +18,6 @@ class PlatformClassLoaderTest extends \PHPUnit_Framework_TestCase
             'defaultTimeZone' => 'UTC',
             'debug' => false
         ));
-        $bootstrap->launch();
 
         $framework = $bootstrap->getFramework();
         $runtime = $framework->getRuntime();
@@ -34,7 +33,6 @@ class PlatformClassLoaderTest extends \PHPUnit_Framework_TestCase
             'defaultTimeZone' => 'UTC',
             'debug' => false
         ));
-        $bootstrap->launch();
 
         $framework = $bootstrap->getFramework();
         $runtime = $framework->getRuntime();
