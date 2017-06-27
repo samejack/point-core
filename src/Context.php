@@ -225,6 +225,19 @@ class Context
             foreach ($properties as &$property) {
                 $doc = $property->getDocComment();
 
+                // @Autoload an be set configuration automatic
+                if (preg_match('/@Autoload/', $doc) > 0
+                    && preg_match('/@var ([A-Za-z0-9_\\\\]+)/', $doc, $matches) > 0
+                ) {
+                    $className = $this->normalizeClassName($matches[1]);
+                    $config = array(
+                        array(
+                            Bean::CLASS_NAME => $className
+                        )
+                    );
+                    $this->addConfiguration($config);
+                }
+
                 // by type to injection object instance when find @Autowired and @var annotation.
                 if (preg_match('/@Autowired/', $doc) > 0
                     && preg_match('/@var ([A-Za-z0-9_\\\\]+)/', $doc, $matches) > 0
@@ -238,6 +251,7 @@ class Context
 
                     $this->_beanMapByClassName[$className]->inject($bean, $property);
                 } else if (preg_match('/@Qualifier\([\'"]?([^\'"]+)[\'"]?\)/', $doc, $matches) > 0) {
+                    // Qualifier
                     $beanId = $matches[1];
                     if (!array_key_exists($beanId, $this->_beanMapById)) {
                         //TODO: How to create BeanFactory instance
