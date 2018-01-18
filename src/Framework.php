@@ -193,5 +193,14 @@ class Framework
         return $this->_runtime;
     }
 
+    /**
+     * Get command line interface status
+     *
+     * @return boolean
+     */
+    public function isCliMode()
+    {
+        return php_sapi_name() === 'cli' || defined('STDIN');
+    }
 
 }

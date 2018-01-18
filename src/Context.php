@@ -67,8 +67,8 @@ class Context
     public function __construct($initConfig = null)
     {
         // load family class
-        require_once dirname(__FILE__) . '/Bean.php';
-        require_once dirname(__FILE__) . '/BeanFactory.php';
+        require_once __DIR__ . '/Bean.php';
+        require_once __DIR__ . '/BeanFactory.php';
 
         // extend config (init default configuration)
         $this->_config = array(
