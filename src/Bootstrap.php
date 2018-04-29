@@ -27,7 +27,12 @@ class Bootstrap
         );
         $this->_framework = $context->getBeanByClassName('point\core\Framework');
 
-        $this->getFramework()->prepare()->launch()->destroy();
+        try {
+            $this->getFramework()->prepare()->launch()->destroy();
+        } catch (\Exception $exception) {
+            echo $exception;
+            exit(1);
+        }
     }
 
     /**
