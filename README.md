@@ -53,6 +53,7 @@ echo $bar;  // print Bar!
 | Annotation          | Description                |
 | :-------------      | :-------------             |
 | @Autowired          | Auto inject                |
+| @Autoload           | Auto load class file without bean defined |
 | @var                | Mapping by class or interface name |
 | @Qualifier          | Inject by identify         |
 
