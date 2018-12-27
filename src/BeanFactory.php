@@ -48,7 +48,7 @@ class BeanFactory
      */
     public function __construct(
         Context &$_context,
-        array &$configuration = null,
+        array $configuration = null,
         \ReflectionClass &$reflector = null
     ) {
         $this->_context = $_context;
@@ -150,15 +150,16 @@ class BeanFactory
 
             $object = $this->_make();
             $this->setInstance($object);
-            $this->_context->log('Singleton scope ready: ' . get_class($object));
+            $this->_context->log('Singleton scope, instance: ' . get_class($object));
             return $this->_instance;
         }
 
         // prototype scope
         if (isset($this->_rawConfiguration[Bean::SCOPE])
-            && $this->_rawConfiguration[Bean::SCOPE] === Bean::SCOPE_PROTOTYPE) {
+            && $this->_rawConfiguration[Bean::SCOPE] === Bean::SCOPE_PROTOTYPE
+        ) {
             $object = $this->_make();
-            $this->_context->log('Prototype scope ready: ' . get_class($object));
+            $this->_context->log('Prototype scope, instance: ' . get_class($object));
             $this->setInstance($object);
         }
 
@@ -277,7 +278,7 @@ class BeanFactory
                     call_user_func(array($this->_instance, $methodName));
                 }
             } else {
-                throw new \Exception('Initialize method not found: ' . $methodName);
+                throw new \Exception('Initialize invoke method not found: ' . $methodName);
             }
         }
     }

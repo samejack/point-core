@@ -129,17 +129,24 @@ class Context
         foreach ($configurations as &$configuration) {
             $className = $this->normalizeClassName($configuration[Bean::CLASS_NAME]);
 
+            // class name setting
             if (!array_key_exists($className, $this->_beanMapByClassName)) {
                 // make a new bean repository
-                $this->_instanceBeanFactoryByClassName($className, $configuration);
-            } else if (isset($configuration[Bean::ID])
-                && !isset($this->_beanMapById[$configuration[Bean::ID]])
-            ) {
-                // make a new bean with different bean ID
                 $this->_instanceBeanFactoryByClassName($className, $configuration);
             } else if (!$this->_beanMapByClassName[$className]->hasConfiguration()) {
                 // create and update configuration
                 $this->_beanMapByClassName[$className]->setConfiguration($configuration);
+            }
+
+            // bean id setting
+            if (isset($configuration[Bean::ID])) {
+                if (!isset($this->_beanMapById[$configuration[Bean::ID]])) {
+                    // make a new bean with different bean ID
+                    $this->_instanceBeanFactoryById($configuration[Bean::ID], $configuration);
+                } else if (!$this->_beanMapById[$configuration[Bean::ID]]->hasConfiguration()) {
+                    // create and update configuration
+                    $this->_beanMapById[$configuration[Bean::ID]]->setConfiguration($configuration); 
+                }
             }
         }
     }
@@ -191,6 +198,21 @@ class Context
             $this->_instanceBeanFactoryByClassName($className);
         }
         return $this->_beanMapByClassName[$className]->getInstance();
+    }
+
+    /**
+     * Get bean by id
+     *
+     * @param string $id
+     * @return object
+     */
+    public function &getBeanById($id)
+    {
+        if (!array_key_exists($id, $this->_beanMapById)) {
+            // make a new bean repository
+            return null;
+        }
+        return $this->_beanMapById[$id]->getInstance();
     }
 
     /**
@@ -254,12 +276,9 @@ class Context
                     // Qualifier
                     $beanId = $matches[1];
                     if (!array_key_exists($beanId, $this->_beanMapById)) {
-                        //TODO: How to create BeanFactory instance
-
-                        $this->log('//TODO: !!');
-                    } else {
-                        $this->_beanMapById[$beanId]->inject($bean, $property);
+                        $this->_instanceBeanFactoryById($beanId, null, $reflector);
                     }
+                    $this->_beanMapById[$beanId]->inject($bean, $property);
                 }
             }
             return $reflector;
@@ -329,4 +348,27 @@ class Context
         }
     }
 
+    /**
+     * Create bean factory and set by bean id
+     *
+     * @param string           $id
+     * @param array            $configuration
+     * @param \ReflectionClass $reflector
+     * @throws \Exception
+     */
+    private function _instanceBeanFactoryById(
+        $id,
+        $configuration = null,
+        \ReflectionClass &$reflector = null
+    ) {
+        // set to id hash table
+        if (isset($this->_beanMapById[$id])) {
+            throw new \Exception('Bean id is already existed: ' . $configuration[Bean::ID]);
+        }
+
+        $this->log('Create BeanFactory by  = ' . $id);
+        $beanFactory = new BeanFactory($this, $configuration, $reflector);
+        $this->log('Set bean map by ID = ' . $id);
+        $this->_beanMapById[$id] = &$beanFactory;
+    }
 }
