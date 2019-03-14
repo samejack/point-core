@@ -20,6 +20,7 @@ class BeanFactory
     private $_instance = null;
     private $_initMethods = array();
     private $_dependencyInjectionBeans = array();
+    private $_injectedBeansHistory = array();
     private $_hasConfiguration = false;
 
     private $_included = false;
@@ -64,6 +65,11 @@ class BeanFactory
         }
     }
 
+    public function getConfiguration()
+    {
+        return $this->_rawConfiguration;
+    }
+
     /**
      * Get bean instance status
      *
@@ -94,9 +100,9 @@ class BeanFactory
         return $this->_reflector;
     }
 
-    public function setConfiguration(&$configuration)
+    public function setConfiguration(&$configuration, $replace = false)
     {
-        if ($this->_hasConfiguration) {
+        if ($replace === false && $this->_hasConfiguration) {
             throw new \Exception('Has configuration already: ' . $configuration[Bean::CLASS_NAME]);
         }
 
@@ -136,12 +142,13 @@ class BeanFactory
 
     /**
      * Get class instance
+     * Refence @Scope(singleton/prototype) anotation
      *
      * @return object
      */
     public function &getInstance()
     {
-        // TODO: non-singleton @Scope(singleton/prototype) anotation
+        // singleton scope
         if (is_null($this->_instance) && $this->hasConfiguration()) {
             if (!$this->_included && isset($this->_rawConfiguration[Bean::INCLUDE_PATH])) {
                 $this->_included = true;
@@ -164,6 +171,41 @@ class BeanFactory
         }
 
         return $this->_instance;
+    }
+
+    /**
+     * Reinstance class and inject again
+     *
+     * @return bool|null
+     * @throws \Exception
+     */
+    public function renew()
+    {
+        if ($this->hasConfiguration()) {
+            if (isset($this->_rawConfiguration[Bean::INCLUDE_PATH])) {
+                include_once($this->_rawConfiguration[Bean::INCLUDE_PATH]);
+            }
+
+            $instance = $this->_make();
+            $this->setInstance($instance);
+            $this->_context->log('Renew instance: ' . get_class($instance));
+
+            // inject again
+            foreach ($this->_injectedBeansHistory as &$beanInfo) {
+                $bean = $beanInfo[0];
+                $property = $beanInfo[1];
+                if ($property->isPrivate() || $property->isProtected()) {
+                    $property->setAccessible(true);
+                    $property->setValue($bean, $instance);
+                    $property->setAccessible(false);
+                } else {
+                    $property->setValue($bean, $this->_instance);
+                }
+            }
+
+            return $this->_instance;
+        }
+        return false;
     }
 
     /**
@@ -199,8 +241,14 @@ class BeanFactory
     {
         $instance = $this->getInstance();
         if (!is_null($instance)) {
-            $property->setAccessible(true);
-            $property->setValue($bean, $this->_instance);
+            if ($property->isPrivate() || $property->isProtected()) {
+                $property->setAccessible(true);
+                $property->setValue($bean, $instance);
+                $property->setAccessible(false);
+            } else {
+                $property->setValue($bean, $this->_instance);
+            }
+            $this->_injectedBeansHistory[] = [$bean, $property];
         } else {
             array_push($this->_dependencyInjectionBeans, array(
                 self::$_KEY_R_BEAN => $bean,
