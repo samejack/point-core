@@ -35,9 +35,8 @@ class EventHandleManager
         spl_autoload_register(array($this, 'loadClass'), true, false);
         set_exception_handler(array($this, 'exceptionHandler'));
 
-        $_config = $this->_framework->getConfig();
-        if (isset($_config['displayErrorLevel'])) {
-            set_error_handler(array($this, 'errorHandler'), $_config['displayErrorLevel']);
+        if (!is_null($this->_framework) && isset($this->_framework->getConfig()['displayErrorLevel'])) {
+            set_error_handler(array($this, 'errorHandler'), $this->_framework->getConfig()['displayErrorLevel']);
         } else {
             set_error_handler(array($this, 'errorHandler'));
         }
