@@ -19,10 +19,28 @@ class EventHandleManager
      */
     private $_exceptionHandlers = array();
 
+    /**
+     * @var array
+     */
+    private $_errorHandlers = array();
+
+    /**
+     * @Autowired
+     * @var \point\core\Framework
+     */
+    private $_framework;
+
     public function register()
     {
         spl_autoload_register(array($this, 'loadClass'), true, false);
         set_exception_handler(array($this, 'exceptionHandler'));
+
+        $_config = $this->_framework->getConfig();
+        if (isset($_config['displayErrorLevel'])) {
+            set_error_handler(array($this, 'errorHandler'), $_config['displayErrorLevel']);
+        } else {
+            set_error_handler(array($this, 'errorHandler'));
+        }
     }
 
     /**
@@ -67,7 +85,22 @@ class EventHandleManager
     }
 
     /**
-     * Add an exception handler into list
+     * Master exception handler
+     *
+     * @param \Exception $exception
+     * @return boolean
+     */
+    public function errorHandler($code, $message, $file, $line)
+    {
+        foreach ($this->_errorHandlers as &$errorHandler) {
+            if ($errorHandler->errorHandler($code, $message, $file, $line) === true) {
+                break;
+            }
+        }
+    }
+
+    /**
+     * Add an exception handler into framework
      *
      * @param object $handler
      */
@@ -76,4 +109,13 @@ class EventHandleManager
         array_push($this->_exceptionHandlers, $handler);
     }
 
+    /**
+     * Add an error handler into framework
+     *
+     * @param object $handler
+     */
+    public function addErrorHandler(&$handler)
+    {
+        array_push($this->_errorHandlers, $handler);
+    }
 }
