@@ -79,6 +79,16 @@ class Framework
     }
 
     /**
+     * Get config of framework
+     *
+     * @return array
+     */
+    public function getConfig()
+    {
+        return $this->_config;
+    }
+
+    /**
      * Prepare before launch
      * Install and resolve all plugins
      *
