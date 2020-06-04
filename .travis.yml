@@ -12,7 +12,9 @@ matrix:
   allow_failures:
     - php: 5.3
     - php: 5.4
-
+    - php: 5.5
+    - php: 7.1
+    
 env:
 
 before_script:
